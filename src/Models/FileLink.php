@@ -18,17 +18,27 @@ class FileLink extends Link
         'File' => File::class,
     ];
 
-    public function generateLinkDescription(array $data): string
-    {
-        $fileId = $data['FileID'] ?? null;
+    private static $icon = 'menu-files';
 
-        if (!$fileId) {
-            return '';
+    public function generateLinkDescription(array $data): array
+    {
+        $description = '';
+        $title = empty($data['Title']) ? '' : $data['Title'];
+
+        if (!empty($data['FileID'])) {
+            $file = File::get()->byID($data['FileID']);
+            if ($file) {
+                $description = $file->getFilename();
+                if (empty($title)) {
+                    $title = $file->Title;
+                }
+            }
         }
 
-        $file = File::get()->byID($fileId);
-
-        return $file?->getFilename() ?? '';
+        return [
+            'title' => $title,
+            'description' => $description
+        ];
     }
 
     public function LinkTypeHandlerName(): string
@@ -39,5 +49,10 @@ class FileLink extends Link
     public function getURL(): string
     {
         return $this->File?->getURL() ?? '';
+    }
+
+    protected function FallbackTitle(): string
+    {
+        return $this->File ? $this->File->Title : '';
     }
 }

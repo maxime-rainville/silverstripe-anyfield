@@ -33,9 +33,9 @@ jQuery.entwine('ss', ($) => {
       Root.render(<ReactField {...props}  noHolder/>);
     },
 
-    handleChange(event, {id, value}) {
+    handleChange(event, { value }) {
       const fieldID = $(this).data('field-id');
-      $('#' + fieldID).val(JSON.stringify(value)).trigger('change');
+      $(`#${fieldID}`).val(JSON.stringify(value)).trigger('change');
       this.refresh();
     },
 
@@ -46,7 +46,7 @@ jQuery.entwine('ss', ($) => {
      */
     getProps() {
       const fieldID = $(this).data('field-id');
-      const dataStr = $('#' + fieldID).val();
+      const dataStr = $(`#${fieldID}`).val();
       const value = dataStr ? JSON.parse(dataStr) : undefined;
 
       return {

@@ -14,11 +14,10 @@ const apolloConfig = {
     } = props;
     const errors = error && error.graphQLErrors &&
       error.graphQLErrors.map((graphQLError) => graphQLError.message);
-    const linkDescription = readLinkDescription ? readLinkDescription.description : '';
 
     return {
       loading: networkLoading,
-      linkDescription,
+      linkDescriptions: readLinkDescription || [],
       graphQLErrors: errors,
     };
   },
@@ -38,6 +37,6 @@ const query = {
       dataStr: 'dataStr'
     }
   },
-  fields: ['description'],
+  fields: ['id', 'description', 'title'],
 };
 export default query;

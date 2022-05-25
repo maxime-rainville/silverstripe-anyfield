@@ -1,0 +1,14 @@
+.link-box {
+  display: flex;
+  height: 54px;
+  background: white;
+  width: 100%;
+  align-items: stretch;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+
+  &.font-icon-link::before {
+    margin: $spacer-xs;
+  }
+}

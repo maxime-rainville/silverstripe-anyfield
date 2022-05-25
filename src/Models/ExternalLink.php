@@ -15,13 +15,25 @@ class ExternalLink extends Link
         'ExternalUrl' => 'Varchar',
     ];
 
-    public function generateLinkDescription(array $data): string
+    private static $icon = 'external-link';
+
+    public function generateLinkDescription(array $data): array
     {
-        return isset($data['ExternalUrl']) ? $data['ExternalUrl'] : '';
+        $description = isset($data['ExternalUrl']) ? $data['ExternalUrl'] : '';
+        $title = empty($data['Title']) ? $description : $data['Title'];
+        return [
+            'title' => $title,
+            'description' => $description
+        ];
     }
 
     public function getURL(): string
     {
         return $this->ExternalUrl ?? '';
+    }
+
+    protected function FallbackTitle(): string
+    {
+        return $this->ExternalUrl ?: '';
     }
 }

@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\LinkField\JsonData;
 use SilverStripe\LinkField\Type\Registry;
@@ -40,6 +41,12 @@ class Link extends DataObject implements JsonData, Type
      */
     private ?string $linkType = null;
 
+    private static $has_one = [
+        'Owner' => DataObject::class
+    ];
+
+    private static $icon = 'link';
+
     public function defineLinkTypeRequirements()
     {
         Requirements::add_i18n_javascript('silverstripe/linkfield:client/lang', false, true);
@@ -52,14 +59,22 @@ class Link extends DataObject implements JsonData, Type
         return 'FormBuilderModal';
     }
 
-    public function generateLinkDescription(array $data): string
+    public function generateLinkDescription(array $data): array
     {
-        return '';
+        return [
+            'title' => '',
+            'description' => ''
+        ];
     }
 
-    public function LinkTypeTile(): string
+    public function LinkTypeTitle(): string
     {
         return $this->i18n_singular_name();
+    }
+
+    public function LinkTypeIcon(): string
+    {
+        return self::config()->get('icon');
     }
 
     public function scaffoldLinkFields(array $data): FieldList
@@ -88,6 +103,8 @@ class Link extends DataObject implements JsonData, Type
 
             $linkTypeField->setEmptyString('-- select type --');
         }
+
+        $fields->addFieldToTab('Root.Main', HiddenField::create('ID'));
 
         return $fields;
     }
@@ -192,6 +209,9 @@ class Link extends DataObject implements JsonData, Type
         }
 
         $data = $this->toMap();
+
+        $data['OpenInNew'] = boolval($data['OpenInNew']);
+
         $data['typeKey'] = $typeKey;
         // Some of our models (SiteTreeLink in particular) have defined getTitle() methods. We *don't* want to override
         // the 'Title' field (which represent the literal 'Title' Database field) - if we did that, then it would also
@@ -257,5 +277,18 @@ class Link extends DataObject implements JsonData, Type
         }
 
         return $types;
+    }
+
+    /**
+     * Title for the link when rendered in the front end
+     */
+    public function FrontendTitle(): string
+    {
+        return $this->Title ?: $this->FallbackTitle();
+    }
+
+    protected function FallbackTitle(): string
+    {
+        return '';
     }
 }

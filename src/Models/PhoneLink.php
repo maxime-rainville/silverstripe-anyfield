@@ -15,9 +15,15 @@ class PhoneLink extends Link
         'Phone' => 'Varchar(255)',
     ];
 
-    public function generateLinkDescription(array $data): string
+    public function generateLinkDescription(array $data): array
     {
-        return isset($data['Phone']) ? $data['Phone'] : '';
+        if (isset($data)) {
+            return [
+                'title' => $data['Phone']
+            ];
+        }
+
+        return [];
     }
 
     public function getURL(): string

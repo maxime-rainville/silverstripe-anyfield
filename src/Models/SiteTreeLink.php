@@ -26,22 +26,27 @@ class SiteTreeLink extends Link
         'Page' => SiteTree::class,
     ];
 
-    public function generateLinkDescription(array $data): string
+    private static $icon = 'page';
+
+    public function generateLinkDescription(array $data): array
     {
-        $pageId = $data['PageID'] ?? null;
+        $description = '';
+        $title = empty($data['Title']) ? '' : $data['Title'];
 
-        if (!$pageId) {
-            return '';
+        if (!empty($data['PageID'])) {
+            $page = SiteTree::get()->byID($data['PageID']);
+            if ($page) {
+                $description = $page->URLSegment;
+                if (empty($title)) {
+                    $title = $page->Title;
+                }
+            }
         }
 
-        /** @var SiteTree $page */
-        $page = SiteTree::get()->byID($pageId);
-
-        if (!$page?->exists()) {
-            return '';
-        }
-
-        return $page->URLSegment ?: '';
+        return [
+            'title' => $title,
+            'description' => $description
+        ];
     }
 
     public function getCMSFields(): FieldList
@@ -84,28 +89,8 @@ class SiteTreeLink extends Link
         return $url;
     }
 
-    /**
-     * Try to populate link title from page title in case we don't have a title yet
-     *
-     * @return string|null
-     */
-    public function getTitle(): ?string
+    protected function FallbackTitle(): string
     {
-        $title = $this->getField('Title');
-
-        if ($title) {
-            // If we already have a title, we can just bail out without any changes
-            return $title;
-        }
-
-        $page = $this->Page();
-
-        if (!$page?->exists()) {
-            // We don't have a page to fall back to
-            return null;
-        }
-
-        // Use page title as a default value in case CMS user didn't provide the title
-        return $page->Title;
+        return $this->Page ? $this->Page->Title : '';
     }
 }

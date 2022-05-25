@@ -3,6 +3,7 @@
 namespace SilverStripe\LinkField\Form;
 
 use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\LinkField\JsonData;
 use SilverStripe\ORM\DataObject;
@@ -27,7 +28,7 @@ abstract class JsonField extends FormField
         return parent::setValue($value, $data);
     }
 
-     /**
+    /**
      * @param DataObject|DataObjectInterface $record
      * @return $this
      */
@@ -57,7 +58,7 @@ abstract class JsonField extends FormField
                     $record->{"{$fieldname}ID"} = 0;
                 }
             } elseif ($value) {
-                $jsonDataObject = new $class();
+                $jsonDataObject = Injector::inst()->create($class);
                 $jsonDataObject = $jsonDataObject->setData($value);
                 $jsonDataObject->write();
                 $record->{"{$fieldname}ID"} = $jsonDataObject->ID;
@@ -87,7 +88,7 @@ abstract class JsonField extends FormField
             );
         }
 
-        if (!$data) {
+        if (!is_array($data) && empty($data)) {
             return null;
         }
 

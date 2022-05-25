@@ -1,30 +1,30 @@
 /* eslint-disable */
 import i18n from 'i18n';
-import React, {useState, setState} from 'react';
-import { inject } from 'lib/Injector';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import classnames from 'classnames';
 import LinkType from 'types/LinkType';
 
+/**
+ * Displays a dropdown menu allowing the user to pick a link type.
+ */
 const LinkPickerMenu = ({ types, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(prevState => !prevState);
-
 
   return (
     <Dropdown
       isOpen={isOpen}
       toggle={toggle}
-      className="link-picker__menu"
+      className="link-menu"
     >
-      <DropdownToggle className="link-picker__menu-toggle font-icon-link" caret>{i18n._t('Link.ADD_LINK', 'Add Link')}</DropdownToggle>
+      <DropdownToggle className="link-menu__toggle font-icon-link" caret>{i18n._t('Link.ADD_LINK', 'Add Link')}</DropdownToggle>
       <DropdownMenu>
-        {types.map(({key, title}) =>
-            <DropdownItem key={key} onClick={() => onSelect(key)}>{title}</DropdownItem>
+        {types.map(({ key, title, icon }) =>
+          <DropdownItem className={`font-icon-${icon || 'link'}`} key={key} onClick={() => onSelect(key)}>{title}</DropdownItem>
         )}
       </DropdownMenu>
-  </Dropdown>
+    </Dropdown>
   );
 };
 

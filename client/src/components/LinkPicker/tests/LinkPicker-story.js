@@ -7,10 +7,10 @@ import { action } from '@storybook/addon-actions';
 import LinkPicker from '../LinkPicker';
 
 const types = [
-  {key: 'cms', title: 'Page on this site'},
-  {key: 'asset', title: 'File'},
-  {key: 'external', title: 'External URL'},
-  {key: 'mailto', title: 'Email address'},
+  { key: 'cms', title: 'Page on this site' },
+  { key: 'asset', title: 'File' },
+  { key: 'external', title: 'External URL' },
+  { key: 'mailto', title: 'Email address' },
 ];
 
 const link = {
@@ -33,12 +33,12 @@ const props = {
   onSelect,
   onClear,
   onEdit
-}
+};
 
 storiesOf('LinkField/LinkPicker', module)
   .add('Initial', () => (
     <LinkPicker {...props} />
   ))
   .add('Selected', () => (
-    <LinkPicker {...props} link={link}  />
+    <LinkPicker {...props} link={link} />
   ));

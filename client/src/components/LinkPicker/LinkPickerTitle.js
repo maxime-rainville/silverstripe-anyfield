@@ -3,29 +3,29 @@ import i18n from 'i18n';
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinkType from 'types/LinkType';
-import {Button} from 'reactstrap';
+import { Button } from 'reactstrap';
 
 const stopPropagation = (fn) => (e) => {
   e.nativeEvent.stopImmediatePropagation();
   e.preventDefault();
   e.nativeEvent.preventDefault();
   e.stopPropagation();
-  fn && fn();
-}
+  if (fn) {
+    fn();
+  }
+};
 
-const LinkPickerTitle = ({ title, type, description, onClear, onClick }) => (
-  <div className="link-picker__link" >
-    <Button className="link-picker__button font-icon-link"  color="secondary" onClick={stopPropagation(onClick)}>
-      <div className="link-picker__link-detail">
-      <div className="link-picker__title">{title}</div>
-      <small className="link-picker__type">
+const LinkPickerTitle = ({ title, type, description, onClear, onClick, className }) => (
+  <Button className={classnames('link-title', `font-icon-${type.icon || 'link'}`, className)} color="secondary" onClick={stopPropagation(onClick)}>
+    <div className="link-title__detail">
+      <div className="link-title__title">{title}</div>
+      <small className="link-title__type">
         {type.title}:&nbsp;
-        <span className="link-picker__url">{description}</span>
+        <span className="link-title__url">{description}</span>
       </small>
-      </div>
-    </Button>
-    <Button className="link-picker__clear" color="link" onClick={stopPropagation(onClear)}>{i18n._t('Link.CLEAR', 'Clear')}</Button>
-  </div>
+    </div>
+    <Button tag="a" className="link-title__clear" color="link" onClick={stopPropagation(onClear)}>{i18n._t('Link.CLEAR', 'Clear')}</Button>
+  </Button>
 );
 
 LinkPickerTitle.propTypes = {
@@ -34,6 +34,10 @@ LinkPickerTitle.propTypes = {
   description: PropTypes.string,
   onClear: PropTypes.func,
   onClick: PropTypes.func
+};
+
+LinkPickerTitle.defaultProps = {
+  type: {}
 };
 
 export default LinkPickerTitle;

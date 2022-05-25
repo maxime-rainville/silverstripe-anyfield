@@ -1,90 +1,51 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { compose } from 'redux';
-import { inject, injectGraphql, loadComponent } from 'lib/Injector';
-import fieldHolder from 'components/FieldHolder/FieldHolder';
+import { inject } from 'lib/Injector';
+import PropTypes from 'prop-types';
+import LinkData from '../../types/LinkData';
+import AbstractLinkField, { linkFieldPropTypes } from '../AbstractLinkField/AbstractLinkField';
+import linkFieldHOC from '../AbstractLinkField/linkFieldHOC';
 
-const LinkField = ({ id, loading, Loading, data, LinkPicker, onChange, types, linkDescription, ...props }) => {
-  if (loading) {
-    return <Loading />;
-  }
+/**
+ * Renders a Field allowing the selection of a single link.
+ */
+const LinkField = (props) => {
+  const staticProps = {
+    buildLinkProps: () => {
+      const { data, linkDescriptions, types } = props;
 
-  const [editing, setEditing] = useState(false);
-  const [newTypeKey, setNewTypeKey] = useState('');
+      // Try to read the link type from the link data or use newTypeKey
+      const { typeKey } = data;
+      const type = types[typeKey];
 
-  const onClear = (event) => {
-    if (typeof onChange !== 'function') {
-      return;
-    }
-
-    onChange(event, { id, value: {} });
-  };
-
-  const { typeKey } = data;
-  const type = types[typeKey];
-  const modalType = newTypeKey ? types[newTypeKey] : type;
-
-  let title = data ? data.Title : '';
-
-  if (!title) {
-    title = data ? data.TitleRelField : '';
-  }
-
-  const linkProps = {
-    title,
-    link: type ? { type, title, description: linkDescription } : undefined,
-    onEdit: () => { setEditing(true); },
-    onClear,
-    onSelect: (key) => {
-      setNewTypeKey(key);
-      setEditing(true);
+      // Read link title and description
+      const linkDescription = linkDescriptions.length > 0 ? linkDescriptions[0] : {};
+      const { title, description } = linkDescription;
+      return {
+        title,
+        description,
+        type: type || undefined,
+      };
     },
-    types: Object.values(types)
+    clearLinkData: () => ({}),
+    updateLinkData: newLinkData => newLinkData,
+    selectLinkData: () => (props.data),
   };
 
-  const onModalSubmit = (modalData, action, submitFn) => {
-    const { SecurityID, action_insert: actionInsert, ...value } = modalData;
-
-    if (typeof onChange === 'function') {
-      onChange(event, { id, value });
-    }
-
-    setEditing(false);
-    setNewTypeKey('');
-
-    return Promise.resolve();
-  };
-
-  const modalProps = {
-    type: modalType,
-    editing,
-    onSubmit: onModalSubmit,
-    onClosed: () => {
-      setEditing(false);
-    },
-    data
-  };
-
-  const handlerName = modalType ? modalType.handlerName : 'FormBuilderModal';
-  const LinkModal = loadComponent(`LinkModal.${handlerName}`);
-
-  return <Fragment>
-      <LinkPicker {...linkProps} />
-      <LinkModal {...modalProps} />
-    </Fragment>;
+  return <AbstractLinkField {...props} {...staticProps} />;
 };
 
-const stringifyData = (Component) => (({ data, value, ...props }) => {
-  let dataValue = value || data;
-  if (typeof dataValue === 'string') {
-    dataValue = JSON.parse(dataValue);
-  }
-  return <Component dataStr={JSON.stringify(dataValue)} {...props} data={dataValue} />;
-});
+LinkField.propTypes = {
+  ...linkFieldPropTypes,
+  data: LinkData
+};
+
+export { LinkField as Component };
 
 export default compose(
-  inject(['LinkPicker', 'Loading']),
-  injectGraphql('readLinkTypes'),
-  stringifyData,
-  injectGraphql('readLinkDescription'),
-  fieldHolder
+  inject(
+    ['LinkPicker', 'Loading'],
+    (LinkPicker, Loading) => ({ Picker: LinkPicker, Loading })
+  ),
+  linkFieldHOC
 )(LinkField);

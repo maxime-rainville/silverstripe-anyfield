@@ -21,14 +21,19 @@ interface Type
     public function LinkTypeHandlerName(): string;
 
     /**
-     * What should be the link description be given this data.
+     * Font icon to attach to this link type
      */
-    public function generateLinkDescription(array $data): string;
+    public function LinkTypeIcon(): string;
 
     /**
-     * Human readbale title of this link type
+     * What should be the link description be given this data.
      */
-    public function LinkTypeTile(): string;
+    public function generateLinkDescription(array $data): array;
+
+    /**
+     * Human readable title of this link type
+     */
+    public function LinkTypeTitle(): string;
 
     /**
      * Build a list of fields suitable to edit this link type

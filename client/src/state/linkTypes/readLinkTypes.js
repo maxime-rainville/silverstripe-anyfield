@@ -43,6 +43,6 @@ const query = {
       keys: 'keys'
     }
   },
-  fields: ['key', 'title', 'handlerName'],
+  fields: ['key', 'title', 'handlerName', 'icon'],
 };
 export default query;

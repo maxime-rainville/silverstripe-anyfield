@@ -18,9 +18,14 @@ class EmailLink extends Link
         'Email' => 'Varchar(255)',
     ];
 
-    public function generateLinkDescription(array $data): string
+    public function generateLinkDescription(array $data): array
     {
-        return isset($data['Email']) ? $data['Email'] : '';
+        $description = isset($data['Email']) ? $data['Email'] : '';
+        $title = empty($data['Title']) ? $description : $data['Title'];
+        return [
+            'title' => $title,
+            'description' => $description
+        ];
     }
 
     public function getCMSFields(): FieldList
@@ -35,5 +40,10 @@ class EmailLink extends Link
     public function getURL(): string
     {
         return $this->Email ? sprintf('mailto:%s', $this->Email) : '';
+    }
+
+    protected function FallbackTitle(): string
+    {
+        return $this->Email ?: '';
     }
 }

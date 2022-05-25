@@ -1,6 +1,8 @@
 LinkDescription:
   description: Given some Link data, computes the matching description
   fields:
+    id: ID
+    title: String
     description: String
 
 LinkType:
@@ -9,3 +11,4 @@ LinkType:
     key: ID
     handlerName: String!
     title: String!
+    icon: String!
