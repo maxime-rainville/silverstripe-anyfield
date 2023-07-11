@@ -11,8 +11,12 @@ Feature: Manage Single Link
     And I am logged in as a member of "AUTHOR" group
     And I go to "/admin/pages"
     Then I should see "About Us" in the tree
+    And I click on "About Us" in the tree
+    And I should see an edit page form
+    And I click the "Link test" CMS tab
+
 
   @javascript
   Scenario: I can open a page for editing from the pages tree
-    When I click on "About Us" in the tree
-    Then I should see an edit page form
+    Then I should see "Add Link" in the "#Form_EditForm_MyTestLink_Holder" element
+

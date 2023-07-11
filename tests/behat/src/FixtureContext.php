@@ -15,7 +15,5 @@ use SilverStripe\Versioned\ChangeSet;
  */
 class FixtureContext extends BaseFixtureContext
 {
-    use StepHelper;
-
 
 }
