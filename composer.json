@@ -34,7 +34,8 @@
     "autoload": {
         "psr-4": {
             "SilverStripe\\LinkField\\": "src/",
-            "SilverStripe\\LinkField\\Tests\\": "tests/php/"
+            "SilverStripe\\LinkField\\Tests\\": "tests/php/",
+            "SilverStripe\\LinkField\\Tests\\Behat\\Context\\": "tests/behat/src/"
         }
     },
     "config": {

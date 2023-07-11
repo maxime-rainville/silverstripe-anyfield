@@ -22,7 +22,7 @@ abstract class JsonField extends FormField
     public function setValue($value, $data = null)
     {
         if ($value && $value instanceof JsonData) {
-            $value = json_encode($value);
+            $value = json_encode($value, JSON_FORCE_OBJECT);
         }
 
         return parent::setValue($value, $data);

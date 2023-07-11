@@ -63,7 +63,7 @@ class DBJson extends DBField
     public function prepValueForDB($value)
     {
         if (is_array($value) || $value instanceof JsonData) {
-            $value = json_encode($value);
+            $value = json_encode($value, JSON_FORCE_OBJECT);
         }
 
         return $value;
