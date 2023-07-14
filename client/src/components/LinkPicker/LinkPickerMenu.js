@@ -8,7 +8,7 @@ import LinkType from 'types/LinkType';
 /**
  * Displays a dropdown menu allowing the user to pick a link type.
  */
-const LinkPickerMenu = ({ types, onSelect }) => {
+const LinkPickerMenu = ({ types, onSelect, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(prevState => !prevState);
 

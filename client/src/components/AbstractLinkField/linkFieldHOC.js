@@ -9,9 +9,7 @@ import fieldHolder from 'components/FieldHolder/FieldHolder';
  * This method rewrites tho data to a normalise format.
  */
 const stringifyData = (Component) => (({ data, value, ...props }) => {
-
   let dataValue = value || data;
-  console.dir(dataValue)
   if (typeof dataValue === 'string') {
     dataValue = JSON.parse(dataValue);
   }

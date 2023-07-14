@@ -34,6 +34,7 @@ const AbstractLinkField = ({
 
   const linkProps = {
     ...buildLinkProps(),
+    id,
     onEdit: (linkId) => { setEditingId(linkId); },
     onClear,
     onSelect: (key) => {

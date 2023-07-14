@@ -6,8 +6,8 @@ import LinkPickerTitle from './LinkPickerTitle';
 import LinkBox from '../LinkBox/LinkBox';
 import LinkType from '../../types/LinkType';
 
-const LinkPicker = ({ types, onSelect, title, description, type, onEdit, onClear }) => (
-  <LinkBox className={classnames('link-picker', { 'link-picker--selected': type })} >
+const LinkPicker = ({ id, types, onSelect, title, description, type, onEdit, onClear }) => (
+  <LinkBox className={classnames('link-picker', { 'link-picker--selected': type })} id={id} >
     { type ?
       <LinkPickerTitle
         description={description}
@@ -28,6 +28,7 @@ LinkPicker.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   type: LinkType,
+  id: PropTypes.string.isRequired,
 };
 
 

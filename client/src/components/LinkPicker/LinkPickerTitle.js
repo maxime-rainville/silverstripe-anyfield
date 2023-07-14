@@ -15,8 +15,13 @@ const stopPropagation = (fn) => (e) => {
   }
 };
 
-const LinkPickerTitle = ({ title, type, description, onClear, onClick, className }) => (
-  <Button className={classnames('link-title', `font-icon-${type.icon || 'link'}`, className)} color="secondary" onClick={stopPropagation(onClick)}>
+const LinkPickerTitle = ({ title, type, description, onClear, onClick, className, id }) => (
+  <Button
+    className={classnames('link-title', `font-icon-${type.icon || 'link'}`, className)}
+    color="secondary"
+    onClick={stopPropagation(onClick)}
+    id={id}
+  >
     <div className="link-title__detail">
       <div className="link-title__title">{title}</div>
       <small className="link-title__type">
