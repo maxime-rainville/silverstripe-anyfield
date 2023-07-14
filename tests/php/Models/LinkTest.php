@@ -54,7 +54,7 @@ class LinkTest extends SapphireTest
         $model->Title = $customTitle;
         $model->write();
 
-        $this->assertEquals($customTitle, $model->Title, 'We expect to get the custom title not page title');
+        $this->assertEquals($customTitle, $model->FrontendTitle(), 'We expect to get the custom title not page title');
     }
 
     /**
