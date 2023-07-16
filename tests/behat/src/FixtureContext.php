@@ -40,16 +40,18 @@ class FixtureContext extends BaseFixtureContext
 
     /**
      *
-     * @Then /^I should see a "(.+?)" LinkField filled with "(.+?)"/
+     * @Then /^I should see a "(.+?)" LinkField filled with "(.+?)" and a description of "(.+?)"/
      * @param string $not
      * @param string $tabLabel
      */
-    public function linkFieldShouldBeContain(string $label, string $linkTitle)
+    public function linkFieldShouldBeContain(string $label, string $linkTitle, string $linkDescription)
     {
         $field = $this->iShouldSeeALinkField($label);
         $title = $field->find('css', '.link-title__title');
+        $description = $field->find('css', '.link-title__type');
 
         Assert::assertSame($linkTitle, $title->getText(), "$label should contain $linkTitle");
+        Assert::assertSame($linkDescription, $description->getText(), "$label should contain $linkDescription");
     }
 
     /**
@@ -97,13 +99,30 @@ class FixtureContext extends BaseFixtureContext
      * @param string $not
      * @param string $tabLabel
      */
-    public function iShouldLinkModal(string $type)
+    public function iShouldSeeLinkModal(string $type)
     {
         $modal = $this->getLinkModal();
         $title = $modal->find('css', '.modal-title');
         Assert::assertSame($type . ' Link', $title->getText(), "Link modal is not there");
     }
 
+    /**
+     * @Then /^I should see a clear button in the "(.+?)" LinkField/
+     * @param string $title
+     */
+    public function iShouldSeeClearLinkButton(string $title): void
+    {
+        $this->getClearLinkButton($title);
+    }
+
+    /**
+     * @Then /^I clear the "(.+?)" LinkField/
+     * @param string $title
+     */
+    public function iClearLinkField(string $title): void
+    {
+        $this->getClearLinkButton($title)->click();
+    }
 
     /**
      * Locate an HTML editor field
@@ -152,6 +171,17 @@ class FixtureContext extends BaseFixtureContext
         }
 
         return null;
+    }
+
+    protected function getClearLinkButton(string $locator): NodeElement
+    {
+        $field = $this->getLinkField($locator);
+        Assert::assertNotNull($field, "Link field $$locator does not exist");
+
+        $button = $field->find('css', '.link-title__clear');
+        Assert::assertNotNull($button, "Could not find clear button in $locator LinkField");
+
+        return $button;
     }
 
     /**
