@@ -45,7 +45,8 @@
     ],
     "transform": {
       ".*": "babel-jest"
-    }
+    },
+    "testEnvironment": "jsdom"
   },
   "devDependencies": {
     "@babel/runtime": "^7.20.0",

@@ -6,9 +6,9 @@ import fieldHolder from 'components/FieldHolder/FieldHolder';
 
 /**
  * When getting data from entwine, we might get it in a plain JSON string.
- * This method rewrites tho data to a normalise format.
+ * This method rewrites the data to a normalise format.
  */
-const stringifyData = (Component) => (({ data, value, ...props }) => {
+export const stringifyData = (Component) => (({ data, value, ...props }) => {
   let dataValue = value || data;
   if (typeof dataValue === 'string') {
     dataValue = JSON.parse(dataValue);
