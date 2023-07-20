@@ -48,7 +48,8 @@ class LinkTest extends SapphireTest
         // The actual Database Title field should still be null
         $this->assertNull($model->getField('Title'));
         // But when we fetch the field (ViewableData) it should return the value from getTitle()
-        $this->assertEquals($page->Title, $model->Title, 'We expect to get the linked Page title');
+        $this->assertEmpty($model->Title, 'Link Title should be blank');
+        $this->assertEquals($page->Title, $model->FrontendTitle(), 'We expect to get the linked Page title');
 
         $customTitle = 'My custom title';
         $model->Title = $customTitle;
