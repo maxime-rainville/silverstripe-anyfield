@@ -17,7 +17,7 @@ const AbstractLinkField = ({
     return <Loading />;
   }
 
-  // When editing is true, wu display a modal to let the user edit the link data
+  // When editing is true, we display a modal to let the user edit the link data
   const [editingId, setEditingId] = useState(false);
   // newTypeKey define what link type we are using for brand new links
   const [newTypeKey, setNewTypeKey] = useState('');
