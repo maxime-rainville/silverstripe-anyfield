@@ -1,15 +1,15 @@
-# Run linkfield behat tests with this command (installed with silverstripe/installer)
-# Note that linkfield behat tests require CMS module
+# Run anyfield behat tests with this command (installed with silverstripe/installer)
+# Note that anyfield behat tests require CMS module
 # ========================================================================= #
 # vendor/bin/selenium-server-standalone -Dwebdriver.firefox.bin="/Applications/Firefox31.app/Contents/MacOS/firefox-bin"
 # vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php
-# vendor/bin/behat @linkfield
+# vendor/bin/behat @anyfield
 # ========================================================================= #
 default:
   suites:
-    linkfield:
+    anyfield:
       paths:
-        - '%paths.modules.linkfield%/tests/behat/features'
+        - '%paths.modules.anyfield%/tests/behat/features'
       contexts:
         - SilverStripe\AnyField\Tests\Behat\Context\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
@@ -18,10 +18,10 @@ default:
         - SilverStripe\BehatExtension\Context\LoginContext
         -
           SilverStripe\AnyField\Tests\Behat\Context\FixtureContext:
-            - '%paths.modules.linkfield%/tests/behat/files/'
+            - '%paths.modules.anyfield%/tests/behat/files/'
         -
           SilverStripe\Framework\Tests\Behaviour\ConfigContext:
-            - '%paths.modules.linkfield%/tests/behat/files/'
+            - '%paths.modules.anyfield%/tests/behat/files/'
   extensions:
     SilverStripe\BehatExtension\Extension:
       bootstrap_file: vendor/silverstripe/cms/tests/behat/serve-bootstrap.php
