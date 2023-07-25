@@ -125,7 +125,7 @@ const AbstractAnyField = _ref => {
     Loading,
     Picker,
     onChange,
-    types,
+    allowedDataObjectClasses,
     clearData,
     buildProps,
     updateData,
@@ -135,9 +135,9 @@ const AbstractAnyField = _ref => {
     return _react.default.createElement(Loading, null);
   }
   const [editingId, setEditingId] = (0, _react.useState)(false);
-  const [newTypeKey, setNewTypeKey] = (0, _react.useState)('');
+  const [newDataObjectClassKey, setNewNemDataObjectClassKey] = (0, _react.useState)('');
   const selectedData = selectData(editingId);
-  const modalType = types[selectedData && selectedData.typeKey || newTypeKey];
+  const modalType = allowedDataObjectClasses[selectedData && selectedData.typeKey || newDataObjectClassKey];
   const onClear = (event, linkId) => {
     if (typeof onChange === 'function') {
       onChange(event, {
@@ -154,10 +154,10 @@ const AbstractAnyField = _ref => {
     },
     onClear,
     onSelect: key => {
-      setNewTypeKey(key);
+      setNewNemDataObjectClassKey(key);
       setEditingId(true);
     },
-    types: Object.values(types)
+    types: Object.values(allowedDataObjectClasses)
   };
   const onModalSubmit = submittedData => {
     const {
@@ -172,7 +172,7 @@ const AbstractAnyField = _ref => {
       });
     }
     setEditingId(false);
-    setNewTypeKey('');
+    setNewNemDataObjectClassKey('');
     return Promise.resolve();
   };
   const modalProps = {
@@ -185,8 +185,8 @@ const AbstractAnyField = _ref => {
     },
     data: selectedData
   };
-  const handlerName = modalType ? modalType.handlerName : 'FormBuilderModal';
-  const LinkModal = (0, _Injector.loadComponent)(`AnyModal.${handlerName}`);
+  const modalHandler = modalType ? modalType.modalHandler : 'FormBuilderModal';
+  const LinkModal = (0, _Injector.loadComponent)(`AnyModal.${modalHandler}`);
   return _react.default.createElement(_react.Fragment, null, _react.default.createElement(Picker, pickerProps), _react.default.createElement(LinkModal, modalProps));
 };
 const anyFieldPropTypes = {
@@ -283,12 +283,12 @@ const AnyField = props => {
       const {
         data,
         anyFieldDescriptions,
-        types
+        allowedDataObjectClasses
       } = props;
       const {
         typeKey
       } = data;
-      const type = types[typeKey];
+      const type = allowedDataObjectClasses[typeKey];
       const anyDescription = anyFieldDescriptions.length > 0 ? anyFieldDescriptions[0] : {};
       const {
         title,
@@ -304,12 +304,15 @@ const AnyField = props => {
     updateData: newAnyFieldData => newAnyFieldData,
     selectData: () => props.data
   };
+  if (props.data === []) {
+    props.data = {};
+  }
   return _react.default.createElement(_AbstractAnyField.default, _extends({}, props, staticProps));
 };
 exports.Component = AnyField;
 AnyField.propTypes = {
   ..._AbstractAnyField.anyFieldPropTypes,
-  data: _AnyFieldData.default
+  data: _propTypes.default.oneOfType([_AnyFieldData.default, _propTypes.default.array])
 };
 var _default = (0, _redux.compose)((0, _Injector.inject)(['AnyPicker', 'Loading'], (AnyPicker, Loading) => ({
   Picker: AnyPicker,

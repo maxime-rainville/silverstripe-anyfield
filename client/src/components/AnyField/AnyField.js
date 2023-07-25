@@ -12,11 +12,11 @@ import anyFieldHOC from '../AbstractAnyField/anyFieldHOC';
 const AnyField = (props) => {
   const staticProps = {
     buildProps: () => {
-      const { data, anyFieldDescriptions, types } = props;
+      const { data, anyFieldDescriptions, allowedDataObjectClasses } = props;
 
       // Try to read the link type from the link data or use newTypeKey
       const { typeKey } = data;
-      const type = types[typeKey];
+      const type = allowedDataObjectClasses[typeKey];
 
       // Read DataObject title and description
       const anyDescription = anyFieldDescriptions.length > 0 ? anyFieldDescriptions[0] : {};
@@ -32,12 +32,17 @@ const AnyField = (props) => {
     selectData: () => (props.data),
   };
 
+  // If we are getting an empty array, we need to convert it to an empty object
+  if (props.data === []) {
+    props.data = {};
+  }
+
   return <AbstractAnyField {...props} {...staticProps} />;
 };
 
 AnyField.propTypes = {
   ...anyFieldPropTypes,
-  data: AnyFieldData
+  data: PropTypes.oneOfType([AnyFieldData, PropTypes.array]),
 };
 
 export { AnyField as Component };

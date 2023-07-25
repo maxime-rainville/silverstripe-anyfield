@@ -9,7 +9,7 @@ import AnyFieldSummary from '../../types/AnyFieldSummary';
  * and MultiAnyField. It should not be used directly.
  */
 const AbstractAnyField = ({
-  id, loading, Loading, Picker, onChange, types,
+  id, loading, Loading, Picker, onChange, allowedDataObjectClasses,
   clearData, buildProps, updateData, selectData
 }) => {
   // Render a loading indicator if we're still fetching some data from the server
@@ -20,10 +20,10 @@ const AbstractAnyField = ({
   // When editing is true, we display a modal to let the user edit the link data
   const [editingId, setEditingId] = useState(false);
   // newTypeKey define what link type we are using for brand new links
-  const [newTypeKey, setNewTypeKey] = useState('');
+  const [newDataObjectClassKey, setNewNemDataObjectClassKey] = useState('');
 
   const selectedData = selectData(editingId);
-  const modalType = types[(selectedData && selectedData.typeKey) || newTypeKey];
+  const modalType = allowedDataObjectClasses[(selectedData && selectedData.typeKey) || newDataObjectClassKey];
 
   // When the use clears the link data, we call onchange with an empty object
   const onClear = (event, linkId) => {
@@ -38,10 +38,10 @@ const AbstractAnyField = ({
     onEdit: (linkId) => { setEditingId(linkId); },
     onClear,
     onSelect: (key) => {
-      setNewTypeKey(key);
+      setNewNemDataObjectClassKey(key);
       setEditingId(true);
     },
-    types: Object.values(types)
+    types: Object.values(allowedDataObjectClasses)
   };
 
   const onModalSubmit = (submittedData) => {
@@ -54,7 +54,7 @@ const AbstractAnyField = ({
     }
     // Close the modal
     setEditingId(false);
-    setNewTypeKey('');
+    setNewNemDataObjectClassKey('');
     return Promise.resolve();
   };
 
@@ -70,8 +70,8 @@ const AbstractAnyField = ({
   };
 
   // Different link types might have different AnyModal
-  const handlerName = modalType ? modalType.handlerName : 'FormBuilderModal';
-  const LinkModal = loadComponent(`AnyModal.${handlerName}`);
+  const modalHandler = modalType ? modalType.modalHandler : 'FormBuilderModal';
+  const LinkModal = loadComponent(`AnyModal.${modalHandler}`);
 
   return (
     <Fragment>
