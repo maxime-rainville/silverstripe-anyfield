@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\LinkField\Tests\Behat\Context;
+namespace SilverStripe\AnyField\Tests\Behat\Context;
 
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\NodeElement;

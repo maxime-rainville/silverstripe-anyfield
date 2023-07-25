@@ -1,10 +1,11 @@
 {
-    "name": "silverstripe/linkfield",
-    "description": "Add advanced link functionality to Silverstripe.",
+    "name": "maxime-rainville/anyfield",
+    "description": "Add Silverstripe CMS field that can be used to manage any relation",
     "type": "silverstripe-vendormodule",
     "require": {
         "php": "^8.1",
-        "silverstripe/cms": "^5"
+        "silverstripe/framework": "^5",
+        "silverstripe/admin": "^2"
     },
     "require-dev": {
         "silverstripe/recipe-testing": "^3",
@@ -19,10 +20,6 @@
         }
     ],
     "extra": {
-        "branch-alias": {
-            "dev-2": "2.x-dev",
-            "dev-1": "1.x-dev"
-        },
         "expose": [
             "client/dist",
             "client/lang"
@@ -34,9 +31,9 @@
     },
     "autoload": {
         "psr-4": {
-            "SilverStripe\\LinkField\\": "src/",
-            "SilverStripe\\LinkField\\Tests\\": "tests/php/",
-            "SilverStripe\\LinkField\\Tests\\Behat\\Context\\": "tests/behat/src/"
+            "SilverStripe\\AnyField\\": "src/",
+            "SilverStripe\\AnyField\\Tests\\": "tests/php/",
+            "SilverStripe\\AnyField\\Tests\\Behat\\Context\\": "tests/behat/src/"
         }
     },
     "config": {

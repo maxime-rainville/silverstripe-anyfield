@@ -1,9 +1,9 @@
 <?php
 
-namespace SilverStripe\LinkField\Type;
+namespace SilverStripe\AnyField\Type;
 
 use SilverStripe\Forms\FieldList;
-use SilverStripe\LinkField\JsonData;
+use SilverStripe\AnyField\JsonData;
 
 /**
  * Define a link type that can be edited in Link Field

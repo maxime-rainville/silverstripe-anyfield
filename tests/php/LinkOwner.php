@@ -1,10 +1,10 @@
 <?php
 
-namespace SilverStripe\LinkField\Tests;
+namespace SilverStripe\AnyField\Tests;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\LinkField\Models\Link;
+use SilverStripe\AnyField\Models\Link;
 
 class LinkOwner extends DataObject
 {

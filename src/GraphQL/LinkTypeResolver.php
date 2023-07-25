@@ -1,12 +1,12 @@
 <?php
 
-namespace SilverStripe\LinkField\GraphQL;
+namespace SilverStripe\AnyField\GraphQL;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use InvalidArgumentException;
 use SilverStripe\GraphQL\Schema\DataObject\Resolver;
-use SilverStripe\LinkField\Type\Registry;
-use SilverStripe\LinkField\Type\Type;
+use SilverStripe\AnyField\Type\Registry;
+use SilverStripe\AnyField\Type\Type;
 
 class LinkTypeResolver extends Resolver
 {

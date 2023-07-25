@@ -1,4 +1,4 @@
-SilverStripe\LinkField\Models\ExternalLink:
+SilverStripe\AnyField\Models\ExternalLink:
   link-1:
     Title: Link1
     ExternalUrl: 'https://silverstripe.org/'
@@ -7,8 +7,8 @@ SilverStripe\LinkField\Models\ExternalLink:
     ExternalUrl: 'https://google.com/'
     # Owner: =>SilverStripe\Link\Tests\LinkOwner.link-owner-1
 
-SilverStripe\LinkField\Tests\LinkOwner:
+SilverStripe\AnyField\Tests\LinkOwner:
   link-owner-1:
     Title: A Link owner
     Links:
-      - =>SilverStripe\LinkField\Models\ExternalLink.link-2
+      - =>SilverStripe\AnyField\Models\ExternalLink.link-2

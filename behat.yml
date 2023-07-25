@@ -11,13 +11,13 @@ default:
       paths:
         - '%paths.modules.linkfield%/tests/behat/features'
       contexts:
-        - SilverStripe\LinkField\Tests\Behat\Context\FeatureContext
+        - SilverStripe\AnyField\Tests\Behat\Context\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
         - SilverStripe\Framework\Tests\Behaviour\CmsUiContext
         - SilverStripe\BehatExtension\Context\BasicContext
         - SilverStripe\BehatExtension\Context\LoginContext
         -
-          SilverStripe\LinkField\Tests\Behat\Context\FixtureContext:
+          SilverStripe\AnyField\Tests\Behat\Context\FixtureContext:
             - '%paths.modules.linkfield%/tests/behat/files/'
         -
           SilverStripe\Framework\Tests\Behaviour\ConfigContext:

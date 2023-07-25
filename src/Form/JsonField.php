@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace SilverStripe\LinkField\Form;
+namespace SilverStripe\AnyField\Form;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
-use SilverStripe\LinkField\JsonData;
+use SilverStripe\AnyField\JsonData;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 

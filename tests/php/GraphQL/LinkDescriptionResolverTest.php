@@ -3,7 +3,7 @@
 namespace SilverStripe\Link\Tests\Form;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\LinkField\GraphQL\LinkDescriptionResolver;
+use SilverStripe\AnyField\GraphQL\LinkDescriptionResolver;
 
 class LinkDescriptionResolverTest extends SapphireTest
 {

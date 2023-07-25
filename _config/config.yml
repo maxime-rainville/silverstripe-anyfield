@@ -4,16 +4,16 @@ Name: linkfield
 
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - SilverStripe\LinkField\Extensions\LeftAndMain
+    - SilverStripe\AnyField\Extensions\LeftAndMain
 
 SilverStripe\Admin\ModalController:
   extensions:
-    - SilverStripe\LinkField\Extensions\ModalController
+    - SilverStripe\AnyField\Extensions\ModalController
 
 SilverStripe\Forms\TreeDropdownField:
   extensions:
-    - SilverStripe\LinkField\Extensions\AjaxField
+    - SilverStripe\AnyField\Extensions\AjaxField
 
 SilverStripe\CMS\Forms\AnchorSelectorField:
   extensions:
-    - SilverStripe\LinkField\Extensions\AjaxField
+    - SilverStripe\AnyField\Extensions\AjaxField

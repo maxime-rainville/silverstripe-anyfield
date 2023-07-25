@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\LinkField\Type;
+namespace SilverStripe\AnyField\Type;
 
 use InvalidArgumentException;
 use LogicException;

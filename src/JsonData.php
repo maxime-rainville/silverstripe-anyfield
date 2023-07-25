@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SilverStripe\LinkField;
+namespace SilverStripe\AnyField;
 
 use JsonSerializable;
 

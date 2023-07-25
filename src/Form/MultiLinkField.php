@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace SilverStripe\LinkField\Form;
+namespace SilverStripe\AnyField\Form;
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\LinkField\Models\Link;
+use SilverStripe\AnyField\Models\Link;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\SS_List;

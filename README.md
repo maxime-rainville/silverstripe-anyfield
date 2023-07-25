@@ -33,9 +33,9 @@ composer require silverstripe/linkfield:^1
 ```php
 <?php
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\LinkField\ORM\DBLink;
-use SilverStripe\LinkField\Models\Link;
-use SilverStripe\LinkField\Form\LinkField;
+use SilverStripe\AnyField\ORM\DBLink;
+use SilverStripe\AnyField\Models\Link;
+use SilverStripe\AnyField\Form\LinkField;
 
 class Page extends SiteTree
 {

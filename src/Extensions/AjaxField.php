@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\LinkField\Extensions;
+namespace SilverStripe\AnyField\Extensions;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FormField;

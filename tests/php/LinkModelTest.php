@@ -1,10 +1,10 @@
 <?php
 
-namespace SilverStripe\LinkField\Tests;
+namespace SilverStripe\AnyField\Tests;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\LinkField\Models\Link;
-use SilverStripe\LinkField\Models\ExternalLink;
+use SilverStripe\AnyField\Models\Link;
+use SilverStripe\AnyField\Models\ExternalLink;
 
 class LinkModelTest extends SapphireTest
 {

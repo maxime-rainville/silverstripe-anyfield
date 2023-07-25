@@ -1,12 +1,12 @@
 <?php
 
-namespace SilverStripe\LinkField\Tests\Form;
+namespace SilverStripe\AnyField\Tests\Form;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\LinkField\Models\Link;
-use SilverStripe\LinkField\Models\ExternalLink;
-use SilverStripe\LinkField\Form\MultiLinkField;
-use SilverStripe\LinkField\Tests\LinkOwner;
+use SilverStripe\AnyField\Models\Link;
+use SilverStripe\AnyField\Models\ExternalLink;
+use SilverStripe\AnyField\Form\MultiLinkField;
+use SilverStripe\AnyField\Tests\LinkOwner;
 
 class MultiLinkFieldTest extends SapphireTest
 {

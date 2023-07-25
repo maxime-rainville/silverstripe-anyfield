@@ -1,5 +1,5 @@
 {
-  "name": "silverstripe-link",
+  "name": "silverstripe-anyfield",
   "version": "0.0.0",
   "description": "Link management for the SilverStripe CMS",
   "main": "./client/src/boot/index.js",
