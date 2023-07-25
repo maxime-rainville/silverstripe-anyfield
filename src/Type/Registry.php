@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\Requirements;
 
 /**
  * Manage the list of known link types
@@ -76,6 +77,12 @@ class Registry
 
     public function init()
     {
+        Requirements::add_i18n_javascript('maxime-rainville/anyfield:client/lang', false, true);
+        Requirements::javascript('silverstripe/admin:client/dist/js/bundle.js');
+        Requirements::javascript('silverstripe/asset-admin:client/dist/js/bundle.js');
+        Requirements::javascript('maxime-rainville/anyfield:client/dist/js/bundle.js');
+        Requirements::css('maxime-rainville/anyfield:client/dist/styles/bundle.css');
+
         foreach ($this->list() as $type) {
             $type->defineLinkTypeRequirements();
         }

@@ -1,8 +1,8 @@
 ---
-Name: linkgraphql
+Name: anyfield-graphql
 ---
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     admin:
       src:
-        link: silverstripe/anyfield:_graphql
+        anyfield: maxime-rainville/anyfield:_graphql

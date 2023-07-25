@@ -18,6 +18,7 @@ abstract class JsonField extends FormField
 {
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
     protected $inputType = 'hidden';
+    protected array $props = [];
 
     public function setValue($value, $data = null)
     {
@@ -93,5 +94,37 @@ abstract class JsonField extends FormField
         }
 
         return $data;
+    }
+
+    public function getProps(): array
+    {
+        return $this->props;
+    }
+
+    public function getPropsJSON(): string
+    {
+        return json_encode($this->props);
+    }
+
+    public function getAttributes()
+    {
+        $attrs = parent::getAttributes();
+
+        $attrs['data-props'] = json_encode($this->getProps);
+
+        $attrs = array_merge($attrs, $this->attributes);
+
+        $this->extend('updateAttributes', $attributes);
+
+        return $attrs;
+    }
+
+    public function getSchemaData()
+    {
+        $schema = parent::getSchemaData();
+
+        $schema = array_merge($schema, $this->getProps());
+
+        return $schema;
     }
 }

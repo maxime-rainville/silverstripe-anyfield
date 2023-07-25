@@ -1,14 +1,6 @@
-LinkDescription:
-  description: Given some Link data, computes the matching description
+AnyFieldDescription:
+  description: Given some AnyField data, computes the matching description
   fields:
     id: ID
     title: String
     description: String
-
-LinkType:
-  description: Describe a Type of Link that can be managed by a LinkField
-  fields:
-    key: ID
-    handlerName: String!
-    title: String!
-    icon: String!

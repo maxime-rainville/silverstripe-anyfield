@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { loadComponent } from 'lib/Injector';
 
 jQuery.entwine('ss', ($) => {
-  $('.js-injector-boot .entwine-jsonfield').entwine({
+  $('.js-injector-boot .entwine-anyfield').entwine({
 
     Component: null,
     Root: null,
@@ -45,11 +45,18 @@ jQuery.entwine('ss', ($) => {
      * @returns {Object}
      */
     getProps() {
+      // Get base props from the starting div and clean them up if need be
+      let baseProps = $(this).data('props');
+      if (!baseProps || typeof baseProps == 'array') {
+        baseProps = {};
+      }
+
       const fieldID = $(this).data('field-id');
       const dataStr = $(`#${fieldID}`).val();
       const value = dataStr ? JSON.parse(dataStr) : undefined;
 
       return {
+        ...baseProps,
         id: fieldID,
         value,
         onChange: this.handleChange.bind(this)

@@ -1,10 +1,8 @@
 /* eslint-disable */
 import Injector from 'lib/Injector';
-import readLinkTypes from 'state/linkTypes/readLinkTypes';
-import readLinkDescription from 'state/linkDescription/readLinkDescription';
+import readAnyFieldDescription from 'state/anyFieldDescription/readAnyFieldDescription';
 
 const registerQueries = () => {
-  Injector.query.register('readLinkTypes', readLinkTypes);
-  Injector.query.register('readLinkDescription', readLinkDescription);
+  Injector.query.register('readAnyFieldDescription', readAnyFieldDescription);
 };
 export default registerQueries;

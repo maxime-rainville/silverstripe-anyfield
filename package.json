@@ -1,14 +1,14 @@
 {
   "name": "silverstripe-anyfield",
   "version": "0.0.0",
-  "description": "Link management for the SilverStripe CMS",
+  "description": "Field to manage any type of DataObject in the CMS",
   "main": "./client/src/boot/index.js",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/silverstripe/silverstripe-link.git"
   },
-  "homepage": "https://github.com/silverstripe/silverstripNe-link",
+  "homepage": "https://github.com/silverstripe/silverstripe-link",
   "bugs": {
     "url": "https://github.com/silverstripe/silverstripe-link/issues"
   },
@@ -37,6 +37,8 @@
       "client/src",
       "../admin/client/src",
       "../admin/node_modules",
+      "../../silverstripe/admin/client/src",
+      "../../silverstripe/admin/node_modules",
       "vendor/silverstripe/admin/client/src",
       "vendor/silverstripe/admin/node_modules"
     ],
