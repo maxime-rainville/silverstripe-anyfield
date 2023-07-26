@@ -18,8 +18,8 @@ class LeftAndMain extends Extension
 
     public function updateClientConfig(&$clientConfig)
     {
-        $clientConfig['form']['DynamicLink'] = [
-            'schemaUrl' => $this->getOwner()->Link('methodSchema/Modals/DynamicLink'),
+        $clientConfig['form']['AnyField'] = [
+            'schemaUrl' => $this->getOwner()->Link('methodSchema/Modals/AnyFieldForm'),
         ];
     }
 }

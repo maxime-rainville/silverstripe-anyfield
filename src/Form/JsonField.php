@@ -2,10 +2,12 @@
 
 namespace SilverStripe\AnyField\Form;
 
+use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\AnyField\JsonData;
+use SilverStripe\AnyField\Services\DataObjectClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 
@@ -22,8 +24,8 @@ abstract class JsonField extends FormField
 
     public function setValue($value, $data = null)
     {
-        if ($value && $value instanceof JsonData) {
-            $value = json_encode($value, JSON_FORCE_OBJECT);
+        if ($value && $value instanceof DataObject && $value->isInDB()) {
+            $value = DataObjectClassInfo::singleton()->jsonSerialize($value);
         }
 
         return parent::setValue($value, $data);
@@ -42,17 +44,17 @@ abstract class JsonField extends FormField
             return $this;
         }
 
+        $service = DataObjectClassInfo::singleton();
         $dataValue = $this->dataValue();
         $value = is_string($dataValue) ? $this->parseString($this->dataValue()) : $dataValue;
 
         if ($class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname)) {
             /** @var JsonData|DataObject $jsonDataObject */
-
             $jsonDataObjectID = $record->{"{$fieldname}ID"};
 
             if ($jsonDataObjectID && $jsonDataObject = $record->$fieldname) {
                 if ($value) {
-                    $jsonDataObject = $jsonDataObject->setData($value);
+                    $jsonDataObject = $service->setData($jsonDataObject, $value);
                     $jsonDataObject->write();
                 } else {
                     $jsonDataObject->delete();
@@ -60,7 +62,7 @@ abstract class JsonField extends FormField
                 }
             } elseif ($value) {
                 $jsonDataObject = Injector::inst()->create($class);
-                $jsonDataObject = $jsonDataObject->setData($value);
+                $jsonDataObject = $service->setData($jsonDataObject, $value);
                 $jsonDataObject->write();
                 $record->{"{$fieldname}ID"} = $jsonDataObject->ID;
             }

@@ -135,29 +135,29 @@ const AbstractAnyField = _ref => {
     return _react.default.createElement(Loading, null);
   }
   const [editingId, setEditingId] = (0, _react.useState)(false);
-  const [newDataObjectClassKey, setNewNemDataObjectClassKey] = (0, _react.useState)('');
+  const [newDataObjectClassKey, setNewDataObjectClassKey] = (0, _react.useState)('');
   const selectedData = selectData(editingId);
-  const modalType = allowedDataObjectClasses[selectedData && selectedData.typeKey || newDataObjectClassKey];
-  const onClear = (event, linkId) => {
+  const modalDataObjectClass = allowedDataObjectClasses[selectedData && selectedData.ClassName || newDataObjectClassKey];
+  const onClear = (event, recordId) => {
     if (typeof onChange === 'function') {
       onChange(event, {
         id,
-        value: clearData(linkId)
+        value: clearData(recordId)
       });
     }
   };
   const pickerProps = {
     ...buildProps(),
     id,
-    onEdit: linkId => {
-      setEditingId(linkId);
+    onEdit: recordId => {
+      setEditingId(recordId);
     },
     onClear,
     onSelect: key => {
-      setNewNemDataObjectClassKey(key);
+      setNewDataObjectClassKey(key);
       setEditingId(true);
     },
-    types: Object.values(allowedDataObjectClasses)
+    allowedDataObjectClasses: Object.values(allowedDataObjectClasses)
   };
   const onModalSubmit = submittedData => {
     const {
@@ -172,11 +172,11 @@ const AbstractAnyField = _ref => {
       });
     }
     setEditingId(false);
-    setNewNemDataObjectClassKey('');
+    setNewDataObjectClassKey('');
     return Promise.resolve();
   };
   const modalProps = {
-    type: modalType,
+    dataObjectClass: modalDataObjectClass,
     editing: editingId !== false,
     onSubmit: onModalSubmit,
     onClosed: () => {
@@ -185,9 +185,9 @@ const AbstractAnyField = _ref => {
     },
     data: selectedData
   };
-  const modalHandler = modalType ? modalType.modalHandler : 'FormBuilderModal';
-  const LinkModal = (0, _Injector.loadComponent)(`AnyModal.${modalHandler}`);
-  return _react.default.createElement(_react.Fragment, null, _react.default.createElement(Picker, pickerProps), _react.default.createElement(LinkModal, modalProps));
+  const modalHandler = modalDataObjectClass && modalDataObjectClass.modalHandler ? modalDataObjectClass.modalHandler : 'FormBuilderModal';
+  const Modal = (0, _Injector.loadComponent)(`AnyModal.${modalHandler}`);
+  return _react.default.createElement(_react.Fragment, null, _react.default.createElement(Picker, pickerProps), _react.default.createElement(Modal, modalProps));
 };
 const anyFieldPropTypes = {
   id: _propTypes.default.string.isRequired,
@@ -286,9 +286,9 @@ const AnyField = props => {
         allowedDataObjectClasses
       } = props;
       const {
-        typeKey
+        dataObjectClassKey
       } = data;
-      const type = allowedDataObjectClasses[typeKey];
+      const dataObjectClass = allowedDataObjectClasses[dataObjectClassKey];
       const anyDescription = anyFieldDescriptions.length > 0 ? anyFieldDescriptions[0] : {};
       const {
         title,
@@ -297,7 +297,7 @@ const AnyField = props => {
       return {
         title,
         description,
-        type: type || undefined
+        dataObjectClass: dataObjectClass || undefined
       };
     },
     clearData: () => ({}),
@@ -395,18 +395,18 @@ const buildSchemaUrl = (key, data) => {
 };
 const AnyModal = _ref => {
   let {
-    type,
+    dataObjectClass,
     editing,
     data,
     ...props
   } = _ref;
-  if (!type) {
+  if (!dataObjectClass) {
     return false;
   }
   return _react.default.createElement(_FormBuilderModal.default, _extends({
-    title: type.title,
+    title: dataObjectClass.title,
     isOpen: editing,
-    schemaUrl: buildSchemaUrl(type.key, data),
+    schemaUrl: buildSchemaUrl(dataObjectClass.key, data),
     identifier: "AnyModal.EditingDataObjectInfo"
   }, props));
 };
@@ -474,7 +474,7 @@ const FileAnyModal = _ref => {
   };
   return _react.default.createElement(_InsertMediaModal.default, _extends({
     isOpen: editing,
-    type: "insert-any-field",
+    type: "insert-link",
     title: false,
     bodyClassName: "modal__dialog",
     className: "insert-any-field__dialog-wrapper--internal",
@@ -492,7 +492,7 @@ function mapDispatchToProps(dispatch) {
         type: 'INIT_FORM_SCHEMA_STACK',
         payload: {
           formSchema: {
-            type: 'insert-any-field',
+            type: 'insert-link',
             nextType: 'admin'
           }
         }
@@ -531,27 +531,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const AnyPicker = _ref => {
   let {
     id,
-    types,
+    allowedDataObjectClasses,
     onSelect,
     title,
     description,
-    type,
+    dataObjectClass,
     onEdit,
     onClear
   } = _ref;
   return _react.default.createElement(_AnyFieldBox.default, {
     className: (0, _classnames.default)('any-picker', {
-      'any-picker--selected': type
+      'any-picker--selected': dataObjectClass
     }),
     id: id
-  }, type ? _react.default.createElement(_AnyPickerTitle.default, {
+  }, dataObjectClass ? _react.default.createElement(_AnyPickerTitle.default, {
     description: description,
     title: title,
-    type: type,
+    dataObjectClass: dataObjectClass,
     onClear: onClear,
     onClick: () => onEdit && onEdit()
   }) : _react.default.createElement(_AnyPickerMenu.default, {
-    types: types,
+    allowedDataObjectClasses: allowedDataObjectClasses,
     onSelect: onSelect
   }));
 };
@@ -562,7 +562,7 @@ AnyPicker.propTypes = {
   onClear: _propTypes.default.func,
   title: _propTypes.default.string,
   description: _propTypes.default.string,
-  allowedDataObjectClass: _AllowedDataObjectClass.default,
+  dataObjectClass: _AllowedDataObjectClass.default,
   id: _propTypes.default.string.isRequired
 };
 var _default = AnyPicker;
@@ -592,7 +592,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const AnyPickerMenu = _ref => {
   let {
-    types,
+    allowedDataObjectClasses,
     onSelect,
     id
   } = _ref;
@@ -601,11 +601,11 @@ const AnyPickerMenu = _ref => {
   return _react.default.createElement(_reactstrap.Dropdown, {
     isOpen: isOpen,
     toggle: toggle,
-    className: "any-menu"
+    className: "any-picker-menu"
   }, _react.default.createElement(_reactstrap.DropdownToggle, {
-    className: "any-menu__toggle font-icon-link",
+    className: "any-picker-menu__toggle font-icon-link",
     caret: true
-  }, _i18n.default._t('AnyField.ADD_DATAOBJECT', 'Add Data Object')), _react.default.createElement(_reactstrap.DropdownMenu, null, types.map(_ref2 => {
+  }, _i18n.default._t('AnyField.ADD_DATAOBJECT', 'Add Data Object')), _react.default.createElement(_reactstrap.DropdownMenu, null, allowedDataObjectClasses.map(_ref2 => {
     let {
       key,
       title,
@@ -657,7 +657,7 @@ const stopPropagation = fn => e => {
 const AnyPickerTitle = _ref => {
   let {
     title,
-    type,
+    dataObjectClass,
     description,
     onClear,
     onClick,
@@ -665,34 +665,34 @@ const AnyPickerTitle = _ref => {
     id
   } = _ref;
   return _react.default.createElement(_reactstrap.Button, {
-    className: classnames('any-field-title', `font-icon-${type.icon || 'link'}`, className),
+    className: classnames('any-picker-title', `font-icon-${dataObjectClass.icon || 'link'}`, className),
     color: "secondary",
     onClick: stopPropagation(onClick),
     id: id
   }, _react.default.createElement("div", {
-    className: "any-field-title__detail"
+    className: "any-picker-title__detail"
   }, _react.default.createElement("div", {
-    className: "any-field-title__title"
+    className: "any-picker-title__title"
   }, title), _react.default.createElement("small", {
-    className: "any-field-title__type"
-  }, type.title, ":\xA0", _react.default.createElement("span", {
-    className: "any-field-title__url"
+    className: "any-picker-title__type"
+  }, dataObjectClass.title, ":\xA0", _react.default.createElement("span", {
+    className: "any-picker-title__url"
   }, description))), _react.default.createElement(_reactstrap.Button, {
     tag: "a",
-    className: "any-field-title__clear",
+    className: "any-picker-title__clear",
     color: "link",
     onClick: stopPropagation(onClear)
   }, _i18n.default._t('AnyField.CLEAR', 'Clear')));
 };
 AnyPickerTitle.propTypes = {
   title: _propTypes.default.string.isRequired,
-  allowedDataObjectClass: _AllowedDataObjectClass.default,
+  dataObjectClass: _AllowedDataObjectClass.default.isRequired,
   description: _propTypes.default.string,
   onClear: _propTypes.default.func,
   onClick: _propTypes.default.func
 };
 AnyPickerTitle.defaultProps = {
-  type: {}
+  dataObjectClass: {}
 };
 var _default = AnyPickerTitle;
 exports["default"] = _default;

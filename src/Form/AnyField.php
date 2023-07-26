@@ -2,8 +2,8 @@
 
 namespace SilverStripe\AnyField\Form;
 
+use SilverStripe\AnyField\Services\DataObjectClassInfo;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -37,12 +37,14 @@ class AnyField extends JsonField
             throw new \InvalidArgumentException($className . ' is not a valid DataObject class and cannot be managed by an AnyField');
         }
 
-        if (!$recursive) {
+        $dataclassService = DataObjectClassInfo::singleton();
 
+        if (!$recursive) {
+            $this->allowedDataObjectClasses[$className] = $dataclassService->generateFieldDefinition($className);
         } else {
             $classes = ClassInfo::subclassesFor($className, $includeBaseClass);
             foreach ($classes as $class) {
-                $this->addSpecificClass($class);
+                $this->allowedDataObjectClasses[$class] = $dataclassService->generateFieldDefinition($class);
             }
         }
 
@@ -51,20 +53,10 @@ class AnyField extends JsonField
         return $this;
     }
 
-    private function addSpecificClass(string $className)
-    {
-        $singleton = DataObject::singleton($className);
-        $this->allowedDataObjectClasses[$className] = [
-            'key' => $className,
-            'title' => $singleton->i18n_singular_name(),
-            'icon' => $singleton->config()->get('icon_class'),
-            'handlerName' => $singleton->config()->get('modal_handler'),
-        ];
-    }
 
     public function removeAllowedDataObjectClass(string $className): self
     {
-        $this->allowedDataObjectClasses = array_diff($this->allowedDataObjectClasses, [$className]);
+        unset($this->allowedDataObjectClasses[$className]);
 
         $this->props['allowedDataObjectClasses'] = $this->allowedDataObjectClasses;
 

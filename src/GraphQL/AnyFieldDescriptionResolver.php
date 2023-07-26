@@ -4,6 +4,7 @@ namespace SilverStripe\AnyField\GraphQL;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use InvalidArgumentException;
+use SilverStripe\AnyField\Services\DataObjectClassInfo;
 use SilverStripe\GraphQL\Schema\DataObject\Resolver;
 use SilverStripe\AnyField\Type\Registry;
 
@@ -33,11 +34,11 @@ class AnyFieldDescriptionResolver extends Resolver
         $description = ['title' => '', 'description' => ''];
 
         // If we don't have a valid typeKey, we'll return a blank description
-        if (!empty($data['typeKey'])) {
-            $type = Registry::singleton()->byKey($data['typeKey']);
-            if (!empty($type)) {
-                $description = $type->generateLinkDescription($data);
-            }
+        if (!empty($data['dataObjectClassKey'])) {
+            $description = DataObjectClassInfo::create()->generateDescription(
+                $data['dataObjectClassKey'],
+                $data
+            );
         }
 
         return array_merge(['id' => $id], $description);

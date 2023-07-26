@@ -6,17 +6,17 @@ import AnyPickerTitle from './AnyPickerTitle';
 import AnyFieldBox from '../AnyFieldBox/AnyFieldBox';
 import AllowedDataObjectClass from '../../types/AllowedDataObjectClass';
 
-const AnyPicker = ({ id, types, onSelect, title, description, type, onEdit, onClear }) => (
-  <AnyFieldBox className={classnames('any-picker', { 'any-picker--selected': type })} id={id} >
-    { type ?
+const AnyPicker = ({ id, allowedDataObjectClasses, onSelect, title, description, dataObjectClass, onEdit, onClear }) => (
+  <AnyFieldBox className={classnames('any-picker', { 'any-picker--selected': dataObjectClass })} id={id} >
+    { dataObjectClass ?
       <AnyPickerTitle
         description={description}
         title={title}
-        type={type}
+        dataObjectClass={dataObjectClass}
         onClear={onClear}
         onClick={() => onEdit && onEdit()}
       /> :
-      <AnyPickerMenu types={types} onSelect={onSelect} />
+      <AnyPickerMenu allowedDataObjectClasses={allowedDataObjectClasses} onSelect={onSelect} />
     }
   </AnyFieldBox>
 );
@@ -27,7 +27,7 @@ AnyPicker.propTypes = {
   onClear: PropTypes.func,
   title: PropTypes.string,
   description: PropTypes.string,
-  allowedDataObjectClass: AllowedDataObjectClass,
+  dataObjectClass: AllowedDataObjectClass,
   id: PropTypes.string.isRequired,
 };
 

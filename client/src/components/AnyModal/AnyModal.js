@@ -18,16 +18,16 @@ const buildSchemaUrl = (key, data) => {
   return url.format({ ...parsedURL, search: qs.stringify(parsedQs) });
 };
 
-const AnyModal = ({ type, editing, data, ...props }) => {
-  if (!type) {
+const AnyModal = ({ dataObjectClass, editing, data, ...props }) => {
+  if (!dataObjectClass) {
     return false;
   }
 
   return (
     <FormBuilderModal
-      title={type.title}
+      title={dataObjectClass.title}
       isOpen={editing}
-      schemaUrl={buildSchemaUrl(type.key, data)}
+      schemaUrl={buildSchemaUrl(dataObjectClass.key, data)}
       identifier="AnyModal.EditingDataObjectInfo"
       {...props}
     />

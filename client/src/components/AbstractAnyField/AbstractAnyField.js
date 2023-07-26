@@ -20,28 +20,28 @@ const AbstractAnyField = ({
   // When editing is true, we display a modal to let the user edit the link data
   const [editingId, setEditingId] = useState(false);
   // newTypeKey define what link type we are using for brand new links
-  const [newDataObjectClassKey, setNewNemDataObjectClassKey] = useState('');
+  const [newDataObjectClassKey, setNewDataObjectClassKey] = useState('');
 
   const selectedData = selectData(editingId);
-  const modalType = allowedDataObjectClasses[(selectedData && selectedData.typeKey) || newDataObjectClassKey];
+  const modalDataObjectClass = allowedDataObjectClasses[(selectedData && selectedData.ClassName) || newDataObjectClassKey];
 
   // When the use clears the link data, we call onchange with an empty object
-  const onClear = (event, linkId) => {
+  const onClear = (event, recordId) => {
     if (typeof onChange === 'function') {
-      onChange(event, { id, value: clearData(linkId) });
+      onChange(event, { id, value: clearData(recordId) });
     }
   };
 
   const pickerProps = {
     ...buildProps(),
     id,
-    onEdit: (linkId) => { setEditingId(linkId); },
+    onEdit: (recordId) => { setEditingId(recordId); },
     onClear,
     onSelect: (key) => {
-      setNewNemDataObjectClassKey(key);
+      setNewDataObjectClassKey(key);
       setEditingId(true);
     },
-    types: Object.values(allowedDataObjectClasses)
+    allowedDataObjectClasses: Object.values(allowedDataObjectClasses)
   };
 
   const onModalSubmit = (submittedData) => {
@@ -54,12 +54,12 @@ const AbstractAnyField = ({
     }
     // Close the modal
     setEditingId(false);
-    setNewNemDataObjectClassKey('');
+    setNewDataObjectClassKey('');
     return Promise.resolve();
   };
 
   const modalProps = {
-    type: modalType,
+    dataObjectClass: modalDataObjectClass,
     editing: editingId !== false,
     onSubmit: onModalSubmit,
     onClosed: () => {
@@ -70,13 +70,13 @@ const AbstractAnyField = ({
   };
 
   // Different link types might have different AnyModal
-  const modalHandler = modalType ? modalType.modalHandler : 'FormBuilderModal';
-  const LinkModal = loadComponent(`AnyModal.${modalHandler}`);
+  const modalHandler = modalDataObjectClass && modalDataObjectClass.modalHandler ? modalDataObjectClass.modalHandler : 'FormBuilderModal';
+  const Modal = loadComponent(`AnyModal.${modalHandler}`);
 
   return (
     <Fragment>
       <Picker {...pickerProps} />
-      <LinkModal {...modalProps} />
+      <Modal {...modalProps} />
     </Fragment>
   );
 };

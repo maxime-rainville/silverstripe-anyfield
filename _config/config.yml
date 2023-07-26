@@ -17,3 +17,8 @@ SilverStripe\Forms\TreeDropdownField:
 SilverStripe\CMS\Forms\AnchorSelectorField:
   extensions:
     - SilverStripe\AnyField\Extensions\AjaxField
+
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\AnyField\Services\DataObjectClassInfo:
+    class: SilverStripe\AnyField\Services\DataObjectClassInfo

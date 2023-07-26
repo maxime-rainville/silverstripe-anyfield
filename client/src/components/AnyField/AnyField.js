@@ -15,8 +15,8 @@ const AnyField = (props) => {
       const { data, anyFieldDescriptions, allowedDataObjectClasses } = props;
 
       // Try to read the link type from the link data or use newTypeKey
-      const { typeKey } = data;
-      const type = allowedDataObjectClasses[typeKey];
+      const { dataObjectClassKey } = data;
+      const dataObjectClass = allowedDataObjectClasses[dataObjectClassKey];
 
       // Read DataObject title and description
       const anyDescription = anyFieldDescriptions.length > 0 ? anyFieldDescriptions[0] : {};
@@ -24,7 +24,7 @@ const AnyField = (props) => {
       return {
         title,
         description,
-        type: type || undefined,
+        dataObjectClass: dataObjectClass || undefined,
       };
     },
     clearData: () => ({}),

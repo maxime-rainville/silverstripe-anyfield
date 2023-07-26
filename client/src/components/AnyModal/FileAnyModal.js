@@ -37,7 +37,7 @@ const FileAnyModal = ({ type, editing, data, actions, onSubmit, ...props }) => {
   return (
     <InsertMediaModal
       isOpen={editing}
-      type="insert-any-field"
+      type="insert-link"
       title={false}
       bodyClassName="modal__dialog"
       className="insert-any-field__dialog-wrapper--internal"
@@ -57,7 +57,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       initModal: () => dispatch({
         type: 'INIT_FORM_SCHEMA_STACK',
-        payload: { formSchema: { type: 'insert-any-field', nextType: 'admin' } },
+        payload: { formSchema: { type: 'insert-link', nextType: 'admin' } },
       }),
       reset: () => dispatch({ type: 'RESET' }),
     },

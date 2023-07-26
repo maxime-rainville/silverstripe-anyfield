@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\Form;
 use SilverStripe\AnyField\Form\FormFactory;
-use SilverStripe\AnyField\Type\Registry;
+use SilverStripe\AnyField\Services\DataObjectClassInfo;
 
 /**
  * Extensions to apply to ModalController so it knows how to handle the DynamicLink action.
@@ -23,7 +23,7 @@ class ModalController extends Extension
     ];
 
     private static array $allowed_actions = [
-        'DynamicLink',
+        'AnyFieldForm',
     ];
 
     /**
@@ -31,11 +31,8 @@ class ModalController extends Extension
      *
      * @return Form
      */
-    public function DynamicLink()
+    public function AnyFieldForm()
     {
-        // Show link text field if requested
-        $linkDataJsonStr = $this->getOwner()->controller->getRequest()->getVar('data');
-
         /** @var OwnerController $owner */
         $owner = $this->getOwner();
 
@@ -45,7 +42,7 @@ class ModalController extends Extension
 
         return $factory->getForm(
             $owner->getController(),
-            "{$owner->getName()}/DynamicLink",
+            "{$owner->getName()}/AnyFieldForm",
             $this->getContext()
         )->loadDataFrom($data);
     }
@@ -57,22 +54,22 @@ class ModalController extends Extension
      */
     private function getContext(): array
     {
-        $linkTypeKey = $this->getOwner()->controller->getRequest()->getVar('key');
+        $dataObjectKey = $this->getOwner()->controller->getRequest()->getVar('key');
 
-        if (!$linkTypeKey) {
+        if (!$dataObjectKey) {
             throw new HTTPResponse_Exception(sprintf('key for class "%s" is required', static::class), 400);
         }
 
-        $type = Registry::singleton()->byKey($linkTypeKey);
+        $type = DataObjectClassInfo::create()->generateFieldDefinition($dataObjectKey);
 
         if (!$type) {
             throw new HTTPResponse_Exception(sprintf('%s is not a valid link type', $type), 400);
         }
 
         return [
-            'LinkData' => $this->getData(),
-            'LinkType' => $type,
-            'LinkTypeKey' => $linkTypeKey,
+            'Data' => $this->getData(),
+            'DataObjectClass' => $type,
+            'DataObjectClassKey' => $dataObjectKey,
             'RequireLinkText' => false
         ];
     }

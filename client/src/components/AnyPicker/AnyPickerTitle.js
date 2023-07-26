@@ -15,34 +15,34 @@ const stopPropagation = (fn) => (e) => {
   }
 };
 
-const AnyPickerTitle = ({ title, type, description, onClear, onClick, className, id }) => (
+const AnyPickerTitle = ({ title, dataObjectClass, description, onClear, onClick, className, id }) => (
   <Button
-    className={classnames('any-field-title', `font-icon-${type.icon || 'link'}`, className)}
+    className={classnames('any-picker-title', `font-icon-${dataObjectClass.icon || 'link'}`, className)}
     color="secondary"
     onClick={stopPropagation(onClick)}
     id={id}
   >
-    <div className="any-field-title__detail">
-      <div className="any-field-title__title">{title}</div>
-      <small className="any-field-title__type">
-        {type.title}:&nbsp;
-        <span className="any-field-title__url">{description}</span>
+    <div className="any-picker-title__detail">
+      <div className="any-picker-title__title">{title}</div>
+      <small className="any-picker-title__type">
+        {dataObjectClass.title}:&nbsp;
+        <span className="any-picker-title__url">{description}</span>
       </small>
     </div>
-    <Button tag="a" className="any-field-title__clear" color="link" onClick={stopPropagation(onClear)}>{i18n._t('AnyField.CLEAR', 'Clear')}</Button>
+    <Button tag="a" className="any-picker-title__clear" color="link" onClick={stopPropagation(onClear)}>{i18n._t('AnyField.CLEAR', 'Clear')}</Button>
   </Button>
 );
 
 AnyPickerTitle.propTypes = {
   title: PropTypes.string.isRequired,
-  allowedDataObjectClass: AllowedDataObjectClass,
+  dataObjectClass: AllowedDataObjectClass.isRequired,
   description: PropTypes.string,
   onClear: PropTypes.func,
   onClick: PropTypes.func
 };
 
 AnyPickerTitle.defaultProps = {
-  type: {}
+  dataObjectClass: {}
 };
 
 export default AnyPickerTitle;
