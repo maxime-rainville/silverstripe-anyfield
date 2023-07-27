@@ -36,9 +36,9 @@ Object.defineProperty(exports, "__esModule", ({
 exports["default"] = void 0;
 var _Injector = _interopRequireDefault(__webpack_require__(/*! lib/Injector */ "lib/Injector"));
 var _AnyPicker = _interopRequireDefault(__webpack_require__(/*! components/AnyPicker/AnyPicker */ "./client/src/components/AnyPicker/AnyPicker.js"));
-var _MultiAnyPicker = _interopRequireDefault(__webpack_require__(/*! components/MultiAnyPicker/MultiAnyPicker */ "./client/src/components/MultiAnyPicker/MultiAnyPicker.js"));
+var _ManyAnyPicker = _interopRequireDefault(__webpack_require__(/*! components/ManyAnyPicker/ManyAnyPicker */ "./client/src/components/ManyAnyPicker/ManyAnyPicker.js"));
 var _AnyField = _interopRequireDefault(__webpack_require__(/*! components/AnyField/AnyField */ "./client/src/components/AnyField/AnyField.js"));
-var _MultiAnyField = _interopRequireDefault(__webpack_require__(/*! components/MultiAnyField/MultiAnyField */ "./client/src/components/MultiAnyField/MultiAnyField.js"));
+var _ManyAnyField = _interopRequireDefault(__webpack_require__(/*! components/ManyAnyField/ManyAnyField */ "./client/src/components/ManyAnyField/ManyAnyField.js"));
 var _AnyModal = _interopRequireDefault(__webpack_require__(/*! components/AnyModal/AnyModal */ "./client/src/components/AnyModal/AnyModal.js"));
 var _FileAnyModal = _interopRequireDefault(__webpack_require__(/*! components/AnyModal/FileAnyModal */ "./client/src/components/AnyModal/FileAnyModal.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -46,8 +46,8 @@ const registerComponents = () => {
   _Injector.default.component.registerMany({
     AnyPicker: _AnyPicker.default,
     AnyField: _AnyField.default,
-    MultiAnyPicker: _MultiAnyPicker.default,
-    MultiAnyField: _MultiAnyField.default,
+    ManyAnyPicker: _ManyAnyPicker.default,
+    ManyAnyField: _ManyAnyField.default,
     'AnyModal.FormBuilderModal': _AnyModal.default,
     'AnyModal.InsertMediaModal': _FileAnyModal.default
   });
@@ -129,7 +129,9 @@ const AbstractAnyField = _ref => {
     clearData,
     buildProps,
     updateData,
-    selectData
+    selectData,
+    baseDataObjectName,
+    baseDataObjectIcon
   } = _ref;
   if (loading) {
     return _react.default.createElement(Loading, null);
@@ -157,7 +159,9 @@ const AbstractAnyField = _ref => {
       setNewDataObjectClassKey(key);
       setEditingId(true);
     },
-    allowedDataObjectClasses: Object.values(allowedDataObjectClasses)
+    allowedDataObjectClasses: Object.values(allowedDataObjectClasses),
+    baseDataObjectName,
+    baseDataObjectIcon
   };
   const onModalSubmit = submittedData => {
     const {
@@ -197,7 +201,9 @@ const anyFieldPropTypes = {
   Picker: _propTypes.default.elementType,
   onChange: _propTypes.default.func,
   allowedDataObjectClasses: _propTypes.default.objectOf(_AllowedDataObjectClass.default),
-  dataobjectDescriptions: _propTypes.default.arrayOf(_AnyFieldSummary.default)
+  dataobjectDescriptions: _propTypes.default.arrayOf(_AnyFieldSummary.default),
+  baseDataObjectName: _propTypes.default.string,
+  baseDataObjectIcon: _propTypes.default.string
 };
 exports.anyFieldPropTypes = anyFieldPropTypes;
 AbstractAnyField.propTypes = {
@@ -537,7 +543,9 @@ const AnyPicker = _ref => {
     description,
     dataObjectClass,
     onEdit,
-    onClear
+    onClear,
+    baseDataObjectName,
+    baseDataObjectIcon
   } = _ref;
   return _react.default.createElement(_AnyFieldBox.default, {
     className: (0, _classnames.default)('any-picker', {
@@ -552,7 +560,9 @@ const AnyPicker = _ref => {
     onClick: () => onEdit && onEdit()
   }) : _react.default.createElement(_AnyPickerMenu.default, {
     allowedDataObjectClasses: allowedDataObjectClasses,
-    onSelect: onSelect
+    onSelect: onSelect,
+    baseDataObjectName: baseDataObjectName,
+    baseDataObjectIcon: baseDataObjectIcon
   }));
 };
 exports.Component = AnyPicker;
@@ -594,7 +604,8 @@ const AnyPickerMenu = _ref => {
   let {
     allowedDataObjectClasses,
     onSelect,
-    id
+    baseDataObjectName,
+    baseDataObjectIcon
   } = _ref;
   const [isOpen, setIsOpen] = (0, _react.useState)(false);
   const toggle = () => setIsOpen(prevState => !prevState);
@@ -603,9 +614,9 @@ const AnyPickerMenu = _ref => {
     toggle: toggle,
     className: "any-picker-menu"
   }, _react.default.createElement(_reactstrap.DropdownToggle, {
-    className: "any-picker-menu__toggle font-icon-link",
+    className: `any-picker-menu__toggle font-icon-${baseDataObjectIcon || 'plus-1'}`,
     caret: true
-  }, _i18n.default._t('AnyField.ADD_DATAOBJECT', 'Add Data Object')), _react.default.createElement(_reactstrap.DropdownMenu, null, allowedDataObjectClasses.map(_ref2 => {
+  }, _i18n.default.sprintf(_i18n.default._t('AnyField.ADD_DATAOBJECT', 'Add %s'), baseDataObjectName)), _react.default.createElement(_reactstrap.DropdownMenu, null, allowedDataObjectClasses.map(_ref2 => {
     let {
       key,
       title,
@@ -699,10 +710,10 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ "./client/src/components/MultiAnyField/MultiAnyField.js":
-/*!**************************************************************!*\
-  !*** ./client/src/components/MultiAnyField/MultiAnyField.js ***!
-  \**************************************************************/
+/***/ "./client/src/components/ManyAnyField/ManyAnyField.js":
+/*!************************************************************!*\
+  !*** ./client/src/components/ManyAnyField/ManyAnyField.js ***!
+  \************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -723,24 +734,25 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function mergeAnyFieldDataWithDescription(links, descriptions) {
-  return links.map(link => {
+function mergeAnyFieldDataWithDescription(datalist, descriptions, allowedDataObjectClasses) {
+  return datalist.map(dataobject => {
     const description = descriptions.find(_ref => {
       let {
         id
       } = _ref;
-      return id.toString() === link.ID.toString();
+      return id.toString() === dataobject.ID.toString();
     });
     return {
-      ...link,
-      ...description
+      ...dataobject,
+      ...description,
+      dataObjectClass: allowedDataObjectClasses[dataobject.dataObjectClassKey]
     };
   });
 }
-const MultiAnyField = props => {
+const ManyAnyField = props => {
   const staticProps = {
     buildProps: () => ({
-      links: mergeAnyFieldDataWithDescription(props.data, props.linkDescriptions)
+      dataobjects: mergeAnyFieldDataWithDescription(props.data, props.anyFieldDescriptions, props.allowedDataObjectClasses)
     }),
     clearData: linkId => props.data.filter(_ref2 => {
       let {
@@ -758,32 +770,34 @@ const MultiAnyField = props => {
         isNew: true
       }];
     },
-    selectData: editingId => props.data.find(_ref3 => {
-      let {
-        ID
-      } = _ref3;
-      return ID === editingId;
-    }) || undefined
+    selectData: editingId => {
+      return props.data && props.data.find(_ref3 => {
+        let {
+          ID
+        } = _ref3;
+        return ID === editingId;
+      }) || undefined;
+    }
   };
   return _react.default.createElement(_AbstractAnyField.default, _extends({}, props, staticProps));
 };
-exports.Component = MultiAnyField;
-MultiAnyField.propTypes = {
+exports.Component = ManyAnyField;
+ManyAnyField.propTypes = {
   ..._AbstractAnyField.anyFieldPropTypes,
   data: _propTypes.default.arrayOf(_AnyFieldData.default)
 };
-var _default = (0, _redux.compose)((0, _Injector.inject)(['MultiAnyPicker', 'Loading'], (MultiAnyPicker, Loading) => ({
-  Picker: MultiAnyPicker,
+var _default = (0, _redux.compose)((0, _Injector.inject)(['ManyAnyPicker', 'Loading'], (ManyAnyPicker, Loading) => ({
+  Picker: ManyAnyPicker,
   Loading
-})), _anyFieldHOC.default)(MultiAnyField);
+})), _anyFieldHOC.default)(ManyAnyField);
 exports["default"] = _default;
 
 /***/ }),
 
-/***/ "./client/src/components/MultiAnyPicker/MultiAnyPicker.js":
-/*!****************************************************************!*\
-  !*** ./client/src/components/MultiAnyPicker/MultiAnyPicker.js ***!
-  \****************************************************************/
+/***/ "./client/src/components/ManyAnyPicker/ManyAnyPicker.js":
+/*!**************************************************************!*\
+  !*** ./client/src/components/ManyAnyPicker/ManyAnyPicker.js ***!
+  \**************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -799,10 +813,10 @@ var _AnyPickerTitle = _interopRequireDefault(__webpack_require__(/*! ../AnyPicke
 var _AnyFieldBox = _interopRequireDefault(__webpack_require__(/*! ../AnyFieldBox/AnyFieldBox */ "./client/src/components/AnyFieldBox/AnyFieldBox.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-const AnyPicker = _ref => {
+const ManyAnyPicker = _ref => {
   let {
-    types,
     onSelect,
+    allowedDataObjectClasses,
     dataobjects,
     onEdit,
     onClear
@@ -812,7 +826,7 @@ const AnyPicker = _ref => {
   }, _react.default.createElement(_AnyFieldBox.default, {
     className: "multi-any-picker__picker"
   }, _react.default.createElement(_AnyPickerMenu.default, {
-    types: types,
+    allowedDataObjectClasses: allowedDataObjectClasses,
     onSelect: onSelect
   })), dataobjects.length > 0 && _react.default.createElement(_AnyFieldBox.default, {
     className: "multi-any-picker__list"
@@ -823,21 +837,20 @@ const AnyPicker = _ref => {
     } = _ref2;
     return _react.default.createElement(_AnyPickerTitle.default, _extends({}, dataobject, {
       className: "multi-any-picker__dataobject",
-      type: types.find(type => type.key === dataobject.typeKey),
       key: `${ID} ${dataobject.description}`,
       onClear: event => onClear(event, ID),
       onClick: () => onEdit(ID)
     }));
   })));
 };
-exports.Component = AnyPicker;
-AnyPicker.propTypes = {
+exports.Component = ManyAnyPicker;
+ManyAnyPicker.propTypes = {
   ..._AnyPickerMenu.default.propTypes,
   dataobjects: _propTypes.default.arrayOf(_propTypes.default.shape(_AnyPickerTitle.default.propTypes)),
   onEdit: _propTypes.default.func,
   onClear: _propTypes.default.func
 };
-var _default = AnyPicker;
+var _default = ManyAnyPicker;
 exports["default"] = _default;
 
 /***/ }),
@@ -1005,9 +1018,9 @@ exports["default"] = void 0;
 var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "prop-types"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const AnyFieldData = _propTypes.default.shape({
-  typeKey: _propTypes.default.string,
+  dataObjectClassKey: _propTypes.default.string,
   Title: _propTypes.default.string,
-  OpenInNew: _propTypes.default.bool
+  ID: _propTypes.default.number
 });
 var _default = AnyFieldData;
 exports["default"] = _default;

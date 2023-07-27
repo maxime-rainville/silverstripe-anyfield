@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
 const AnyFieldData = PropTypes.shape({
-  typeKey: PropTypes.string,
+  dataObjectClassKey: PropTypes.string,
   Title: PropTypes.string,
-  OpenInNew: PropTypes.bool,
+  ID: PropTypes.number,
 });
 
 export default AnyFieldData;

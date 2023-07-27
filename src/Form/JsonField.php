@@ -56,6 +56,7 @@ abstract class JsonField extends FormField
                 if ($value) {
                     $jsonDataObject = $service->setData($jsonDataObject, $value);
                     $jsonDataObject->write();
+                    $record->{"{$fieldname}ID"} = $jsonDataObject->ID;
                 } else {
                     $jsonDataObject->delete();
                     $record->{"{$fieldname}ID"} = 0;
@@ -105,7 +106,7 @@ abstract class JsonField extends FormField
 
     public function getPropsJSON(): string
     {
-        return json_encode($this->props);
+        return json_encode($this->getProps());
     }
 
     public function getAttributes()

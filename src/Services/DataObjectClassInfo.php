@@ -3,9 +3,11 @@
 namespace SilverStripe\AnyField\Services;
 
 use InvalidArgumentException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\SS_List;
 
 class DataObjectClassInfo
 {
@@ -34,12 +36,23 @@ class DataObjectClassInfo
         ];
     }
 
-    public function jsonSerialize(DataObject $value): string
+    private function map(DataObject $value): array
     {
         $data = $value->toMap();
         $data['dataObjectClassKey'] = $value->ClassName;
+        return $data;
+    }
 
+    public function jsonSerialize(DataObject $value): string
+    {
+        $data = $this->map($value);
         return json_encode($data, JSON_FORCE_OBJECT);
+    }
+
+    public function jsonSerializeList(SS_List $list): string
+    {
+        $data = array_map([$this, 'map'], $list->toArray());
+        return json_encode($data);
     }
 
     public function setData(DataObject $record, array|string $data): DataObject
@@ -85,5 +98,30 @@ class DataObjectClassInfo
         }
 
         return $record;
+    }
+
+    public function getAllowedDataObjectClasses(string $baseClass, bool $recursivelyAddChildClass, array $excludedClasses): array
+    {
+        $singleton = DataObject::singleton($baseClass);
+
+        if (!$singleton) {
+            throw new \InvalidArgumentException($baseClass . ' is not a valid DataObject class and cannot be managed by an AnyField');
+        }
+
+        $allowedDataObjectClasses = [];
+
+        if (!$recursivelyAddChildClass) {
+            $allowedDataObjectClasses[$baseClass] = $this->generateFieldDefinition($baseClass);
+        } else {
+            $classes = ClassInfo::subclassesFor($baseClass);
+            foreach ($classes as $class) {
+                if (in_array($class, $excludedClasses)) {
+                    continue;
+                }
+                $allowedDataObjectClasses[$class] = $this->generateFieldDefinition($class);
+            }
+        }
+
+        return $allowedDataObjectClasses;
     }
 }

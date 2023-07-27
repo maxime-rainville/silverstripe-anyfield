@@ -8,7 +8,7 @@ import AllowedDataObjectClass from 'types/AllowedDataObjectClass';
 /**
  * Displays a dropdown menu allowing the user to pick a DataObject type.
  */
-const AnyPickerMenu = ({ allowedDataObjectClasses, onSelect, id }) => {
+const AnyPickerMenu = ({ allowedDataObjectClasses, onSelect, baseDataObjectName, baseDataObjectIcon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(prevState => !prevState);
 
@@ -18,7 +18,14 @@ const AnyPickerMenu = ({ allowedDataObjectClasses, onSelect, id }) => {
       toggle={toggle}
       className="any-picker-menu"
     >
-      <DropdownToggle className="any-picker-menu__toggle font-icon-link" caret>{i18n._t('AnyField.ADD_DATAOBJECT', 'Add Data Object')}</DropdownToggle>
+      <DropdownToggle className={`any-picker-menu__toggle font-icon-${baseDataObjectIcon || 'plus-1'}`} caret>
+        {
+          i18n.sprintf(
+            i18n._t('AnyField.ADD_DATAOBJECT', 'Add %s'),
+            baseDataObjectName
+          )
+        }
+        </DropdownToggle>
       <DropdownMenu>
         {allowedDataObjectClasses.map(({ key, title, icon }) =>
           <DropdownItem className={`font-icon-${icon || 'link'}`} key={key} onClick={() => onSelect(key)}>{title}</DropdownItem>

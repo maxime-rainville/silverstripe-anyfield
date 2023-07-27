@@ -6,11 +6,11 @@ import AnyFieldSummary from '../../types/AnyFieldSummary';
 
 /**
  * Underlying implementation of the AnyField. This is used for both the Single AnyField
- * and MultiAnyField. It should not be used directly.
+ * and ManyAnyField. It should not be used directly.
  */
 const AbstractAnyField = ({
   id, loading, Loading, Picker, onChange, allowedDataObjectClasses,
-  clearData, buildProps, updateData, selectData
+  clearData, buildProps, updateData, selectData, baseDataObjectName, baseDataObjectIcon
 }) => {
   // Render a loading indicator if we're still fetching some data from the server
   if (loading) {
@@ -41,7 +41,9 @@ const AbstractAnyField = ({
       setNewDataObjectClassKey(key);
       setEditingId(true);
     },
-    allowedDataObjectClasses: Object.values(allowedDataObjectClasses)
+    allowedDataObjectClasses: Object.values(allowedDataObjectClasses),
+    baseDataObjectName,
+    baseDataObjectIcon
   };
 
   const onModalSubmit = (submittedData) => {
@@ -93,6 +95,8 @@ export const anyFieldPropTypes = {
   onChange: PropTypes.func,
   allowedDataObjectClasses: PropTypes.objectOf(AllowedDataObjectClass),
   dataobjectDescriptions: PropTypes.arrayOf(AnyFieldSummary),
+  baseDataObjectName: PropTypes.string,
+  baseDataObjectIcon: PropTypes.string,
 };
 
 AbstractAnyField.propTypes = {

@@ -14,7 +14,6 @@ const apolloConfig = {
     } = props;
     const errors = error && error.graphQLErrors &&
       error.graphQLErrors.map((graphQLError) => graphQLError.message);
-
     return {
       loading: networkLoading,
       anyFieldDescriptions: readAnyFieldDescription || [],
