@@ -26,9 +26,11 @@ class DataObjectClassInfo
     {
         $dummy = Injector::inst()->create($className, $data, DataObject::CREATE_MEMORY_HYDRATED);
 
+        $summary = $dummy->hasMethod('getSummary') ? (string)$dummy->getSummary() : '';
+
         return [
             'title' => $dummy->getTitle(),
-            'description' => 'booya',
+            'description' => $summary,
         ];
     }
 

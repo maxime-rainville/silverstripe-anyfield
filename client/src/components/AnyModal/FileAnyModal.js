@@ -5,8 +5,8 @@ import React, { useEffect } from 'react';
 import InsertMediaModal from 'containers/InsertMediaModal/InsertMediaModal';
 import { connect } from 'react-redux';
 
-const FileAnyModal = ({ type, editing, data, actions, onSubmit, ...props }) => {
-  if (!type) {
+const FileAnyModal = ({ dataObjectClass, editing, data, actions, onSubmit, ...props }) => {
+  if (!dataObjectClass) {
     return false;
   }
 
@@ -30,7 +30,7 @@ const FileAnyModal = ({ type, editing, data, actions, onSubmit, ...props }) => {
       ID: data ? data.ID : undefined,
       Title: Description,
       OpenInNew: TargetBlank,
-      typeKey: type.key
+      dataObjectClassKey: dataObjectClass.key
     }, '', () => {})
   );
 

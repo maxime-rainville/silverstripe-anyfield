@@ -4,6 +4,7 @@ namespace SilverStripe\AnyField\Extensions;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FormField;
+use League\Uri\Modifier;
 
 /**
  * Tweak fields that need to be served through the DynamicLink form schema and need to be able to receive AJAX calls.
@@ -20,14 +21,13 @@ class AjaxField extends Extension
         $owner = $this->getOwner();
         $formName = $owner->getForm()->getName();
 
-        if ($formName !== 'Modals/DynamicLink') {
+        if ($formName !== 'Modals/AnyFieldForm') {
             return;
         }
 
         $request = $owner->getForm()->getController()->getRequest();
         $key = $request->getVar('key');
 
-        $link .= strpos($link, '?') === false ? '?' : '&';
-        $link .= "key={$key}";
+        $link = Modifier::from($link)->mergeQuery("key={$key}")->getUri()->__toString();
     }
 }
