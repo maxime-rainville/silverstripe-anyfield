@@ -15,15 +15,14 @@ class FormFactory extends LinkFormFactory
 {
     protected function getFormFields($controller, $name, $context)
     {
-        /** @var Type $type */
         $dataObjectClass = DataObject::singleton($context['DataObjectClassKey']);
 
         if (!$dataObjectClass instanceof DataObject) {
-            var_dump($dataObjectClass);
             throw new LogicException(sprintf('%s: DataObjectClass must be provided and must be an instance of DataObject', static::class));
         }
 
-        $fields = $dataObjectClass->scaffoldLinkFields([]);
+        $fields = $dataObjectClass->scaffoldFormFields([]);
+        $fields->push(HiddenField::create('ID'));
         $fields->push(HiddenField::create('dataObjectClassKey')->setValue($context['DataObjectClassKey']));
         $this->extend('updateFormFields', $fields, $controller, $name, $context);
 

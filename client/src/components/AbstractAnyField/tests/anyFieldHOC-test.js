@@ -1,7 +1,7 @@
 /* global jest, test, expect */
 import React from 'react';
 import { render } from '@testing-library/react';
-import { stringifyData } from '../linkFieldHOC';
+import { stringifyData } from '../anyFieldHOC';
 
 describe('stringifyData', () => {
   test('Entwine form field bootstrap', () => {

@@ -23,7 +23,7 @@ const AbstractAnyField = ({
   const [newDataObjectClassKey, setNewDataObjectClassKey] = useState('');
 
   const selectedData = selectData(editingId);
-  const modalDataObjectClass = allowedDataObjectClasses[(selectedData && selectedData.ClassName) || newDataObjectClassKey];
+  const modalDataObjectClass = allowedDataObjectClasses[(selectedData && selectedData.dataObjectClassKey) || newDataObjectClassKey];
 
   // When the use clears the link data, we call onchange with an empty object
   const onClear = (event, recordId) => {

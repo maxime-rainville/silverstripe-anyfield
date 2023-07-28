@@ -16,22 +16,23 @@ const props = {
     OpenInNew: 0,
     ExternalUrl: 'http://google.com',
     ID: null,
-    typeKey: 'external'
+    dataObjectClassKey: 'sitetree'
   },
-  Picker: ({ id, onEdit, types, onClear, onSelect }) => <div>
+  Picker: ({ id, onEdit, allowedDataObjectClasses, onClear, onSelect }) => <div>
     <span>Picker</span>
     <span>fieldid:{id}</span>
-    <span>types:{types[0].key}-{types[0].icon}-{types[0].title}</span>
+    <span>allowedDataObjectClasses:{allowedDataObjectClasses[0].key}-{allowedDataObjectClasses[0].icon}-{allowedDataObjectClasses[0].title}</span>
     <button onClick={() => onEdit(123)}>onEdit</button>
     <button onClick={(event) => onClear(event, 123)}>onClear</button>
     <button onClick={(event) => onSelect('sitetree')}>onSelect</button>
     </div>,
   onChange: jest.fn(),
-  types: {
+  allowedDataObjectClasses: {
     sitetree: {
       key: 'sitetree',
       icon: 'page',
-      title: 'Site tree'
+      title: 'Site tree',
+      modalHandler: null
     }
   },
   anyDescriptions: [
@@ -61,7 +62,7 @@ describe('AbstractAnyField', () => {
     render(<AnyField {...props} data={{ }} />);
     expect(screen.getByText('Picker')).toBeInTheDocument();
     expect(screen.getByText('fieldid:my-any-field')).toBeInTheDocument();
-    expect(screen.getByText('types:sitetree-page-Site tree')).toBeInTheDocument();
+    expect(screen.getByText('allowedDataObjectClasses:sitetree-page-Site tree')).toBeInTheDocument();
   });
 });
 
