@@ -5,7 +5,7 @@ namespace SilverStripe\Link\Tests\Form;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\AnyField\GraphQL\LinkDescriptionResolver;
 
-class LinkDescriptionResolverTest extends SapphireTest
+class AnyDescriptionResolverTest extends SapphireTest
 {
 
     public function testBadJsonString()

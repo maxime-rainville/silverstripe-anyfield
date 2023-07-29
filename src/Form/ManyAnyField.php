@@ -5,9 +5,7 @@ namespace SilverStripe\AnyField\Form;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Models\BaseElement;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\AnyField\Models\Link;
 use SilverStripe\AnyField\Services\DataObjectClassInfo;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\SS_List;
@@ -21,7 +19,7 @@ class ManyAnyField extends JsonField
 
     private ?SS_List $dataList;
 
-    use BaseClassTrait;
+    use AllowedClassesTrait;
 
     private array $allowedDataObjectClasses = [];
 

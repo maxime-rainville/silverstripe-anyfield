@@ -15,7 +15,7 @@ use SilverStripe\ORM\DataObject;
  */
 class AnyField extends JsonField
 {
-    use BaseClassTrait;
+    use AllowedClassesTrait;
 
     protected $schemaComponent = 'AnyField';
 
@@ -33,7 +33,7 @@ class AnyField extends JsonField
     {
         $baseClass = $this->getBaseClass();
 
-        $allowedDataObjectClasses = DataObjectClassInfo::singleton()->getAllowedDataObjectClasses($baseClass, $this->getRecursivelyAddChildClass(), $this->getExcludeClasses());
+        $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
         if (empty($allowedDataObjectClasses)) {
             throw new \InvalidArgumentException('AnyField must have at least one allowed DataObject class');
         }
@@ -78,6 +78,7 @@ class AnyField extends JsonField
 
         $class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname);
         return $class;
-
     }
+
+
 }

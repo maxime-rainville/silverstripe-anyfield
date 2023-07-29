@@ -8,7 +8,7 @@ use SilverStripe\AnyField\Models\Link;
 
 class LinkOwner extends DataObject
 {
-    private static $table_name = 'LinkOwner';
+    private static $table_name = 'AnyField_LinkOwner';
     private static $db = [
         'Title' => 'Varchar',
     ];

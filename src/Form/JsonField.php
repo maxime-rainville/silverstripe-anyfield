@@ -2,7 +2,6 @@
 
 namespace SilverStripe\AnyField\Form;
 
-use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;

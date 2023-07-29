@@ -13,7 +13,7 @@ use SilverStripe\AnyField\Services\DataObjectClassInfo;
 /**
  * Extensions to apply to ModalController so it knows how to handle the DynamicLink action.
  *
- * This action receive a link type key and some link data as a JSON string and retrieve a Form Schema for a
+ * This action receive a DataObjectClassKey and some data as a JSON string and retrieve a Form Schema for a
  * specific Link Type.
  */
 class ModalController extends Extension
@@ -63,7 +63,7 @@ class ModalController extends Extension
         $type = DataObjectClassInfo::create()->generateFieldDefinition($dataObjectKey);
 
         if (!$type) {
-            throw new HTTPResponse_Exception(sprintf('%s is not a valid link type', $type), 400);
+            throw new HTTPResponse_Exception(sprintf('%s is not a valid ClassName', $type), 400);
         }
 
         return [
