@@ -75,7 +75,6 @@ abstract class AllowedClassesTraitTest extends SapphireTest
         ];
     }
 
-
     /**
      * @dataProvider allowedDataObjectClassesDataProvider
      */
