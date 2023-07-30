@@ -1,50 +1,36 @@
-# Silverstripe link module
+# Silverstripe CMS AnyField module
 
-This module provides a Link model and CMS interface for managing different types of links. Including:
+This module provides two simple form fields to manage has-one and has-many relations for a parent record.
 
-* Emails
-* External links
-* Links to pages within the CMS
-* Links to assets within the CMS
-* Phone numbers
+`AnyField` and `ManyAnyField` are best suited to managing simple DataObjects that are tightly coupled to their owner.
+
+This module will not work well for DataObjects with complex relations.
 
 ## Installation
 
-Installation via composer.
-
-### Silverstripe 5
-
 ```sh
-composer require silverstripe/linkfield
+composer require maxime-rainville/anyfield
 ```
 
-### GraphQL v4 - Silverstripe 4
-
-`composer require silverstripe/linkfield:^2`
-
-### GraphQL v3 - Silverstripe 4
-
-```sh
-composer require silverstripe/linkfield:^1
-```
+This module require Silverstripe CMS 5 or greater.
 
 ## Sample usage
 
 ```php
 <?php
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\AnyField\ORM\DBLink;
-use SilverStripe\AnyField\Models\Link;
-use SilverStripe\AnyField\Form\LinkField;
+use SilverStripe\LinkField\Models\Link;
+use SilverStripe\AnyField\Form\AnyField;
+use SilverStripe\AnyField\Form\ManyAnyField;
 
 class Page extends SiteTree
 {
-    private static array $db = [
-        'DbLink' => DBLink::class
+    private static array $has_one = [
+        'SingleLink' => Link::class,
     ];
 
-    private static array $has_one = [
-        'HasOneLink' => Link::class,
+    private static array $has_many = [
+        'ManyLinks' => Link::class,
     ];
 
     public function getCMSFields()
@@ -54,8 +40,8 @@ class Page extends SiteTree
         $fields->addFieldsToTab(
             'Root.Main',
             [
-                LinkField::create('HasOneLink'),
-                LinkField::create('DbLink'),
+                AnyField::create('SingleLink'),
+                ManyAnyField::create('ManyLinks'),
             ]
         )
 
@@ -64,19 +50,106 @@ class Page extends SiteTree
 }
 ```
 
-## Migrating from Version `1.0.0` or `dev-master`
+## Customising how DataObject look in the field
 
-Please be aware that in early versions of this module (and in untagged `dev-master`) there were no table names defined
-for our `Link` classes. These have now all been defined, which may mean that you need to rename your old tables, or
-migrate the data across.
+Any DataObject can be managed by the AnyField and ManyAnyField without any special tweaks. However, you can get a bit more value with some simple tweaks. Those tweaks can be applied with DataExtension.
 
-EG: `SilverStripe_LinkField_Models_Link` needs to be migrated to `LinkField_Link`.
+### Customising the Title
 
-## Migrating from Shae Dawson's Linkable module
+The AnyFields displays the selected DataObject title. By defining a `getTitle` method for DataObject class, you can customise the title displayed in the field.
 
-https://github.com/sheadawson/silverstripe-linkable
+### Showing a summary
 
-Shae Dawson's Linkable module was a much loved, and much used module. It is, unfortunately, no longer maintained. We
-have provided some steps and tasks that we hope can be used to migrate your project from Linkable to LinkField.
+The AnyFields displays the type of the selected DataObject below its title. You can also display a summary by implementing a `getSummary` method on your DataObject class. This can be done with a DataExtension as well.
 
-* [Migraiton docs](docs/en/linkable-migration.md)
+### Showing an icon
+
+You can customise the icon to display for each class of DataObject by defining a `private static $icon` config value for your DataObject.
+
+[Silverstripe CMS comes with some predefined icons](https://silverstripe.github.io/silverstripe-pattern-lib/?path=/story/admin-icons--icon-reference) you can use. Alternatively, the `icon` value will be add as a CSS class to the relevant button which you can then target with your own custom icon.
+
+```yml
+# This will add a `font-icon-link` class to the AnyField when managing a Book class.
+App\Models\Book:
+  icon: book
+```
+
+## Advanced use case
+
+### Auto-publishing and cascade deleting
+
+The AnyFields doesn't allow you to publish or delete child DataObjects independently from their owner. To avoid orphan objects or unpublished DataObject, you should explicitly define [ownership](https://docs.silverstripe.org/en/5/developer_guides/model/versioning#ownership) and [cascade rules](https://docs.silverstripe.org/en/5/developer_guides/model/relations/#cascading-deletions) on the owner DataObject class.
+
+```php
+<?php
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\LinkField\Models\Link;
+use SilverStripe\AnyField\Form\AnyField;
+use SilverStripe\AnyField\Form\ManyAnyField;
+
+class Page extends SiteTree
+{
+    private static array $has_one = [
+        'SingleLink' => Link::class,
+    ];
+
+    private static array $has_many = [
+        'ManyLinks' => Link::class,
+    ];
+
+    /** Publishing the page will automatically publish those relations */
+    private static $owns = [
+        'SingleLink',
+        'ManyLinks'
+    ];
+
+    /** The relations will be deleted when the page is deleted */
+    private static $cascade_deletes = [
+        'SingleLink',
+        'ManyLinks'
+    ];
+
+    /** The relations will be duplicated when the page is duplicated */
+    private static $cascade_duplicates = [
+        'SingleLink',
+        'ManyLinks'
+    ];
+
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                AnyField::create('SingleLink'),
+                ManyAnyField::create('ManyLinks'),
+            ]
+        )
+
+        return $fields;
+    }
+}
+```
+### Controlling what DataObject class can be created via the AnyFields
+
+AnyField and ManyAnyField try to automatically detect what DataObject classes they are meant to manage by looking up the matching relations on their parent object.
+
+If you decide to name the AnyFields something other than its intended relation, you'll have to explicitly tell it what DataObject class to use.
+
+```php
+AnyField::create('MyItem', 'My Item', $this->Item)->setBaseClass(Link::class);
+```
+
+By the default, the AnyField automatically discovers any sub classes of the base class and allows the end user to create those sub classes. You can turn off this behaviour by calling `setRecursivelyAddChildClass`.
+
+```php
+AnyField::create('MyItem')->setRecursivelyAddChildClass(false);
+```
+
+You can also exclude individual classes as well.
+
+```php
+// The filed will allow you to create child classes of Link, but not a plain Link
+AnyField::create('MyLink')->setBaseClass(Link::class)->addExcludedClass(Link::class);
+```

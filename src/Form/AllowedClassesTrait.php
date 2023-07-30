@@ -105,6 +105,7 @@ trait AllowedClassesTrait
     public function getAllowedDataObjectClasses(): array
     {
         $baseClass = $this->getBaseClass();
+
         return DataObjectClassInfo::singleton()->getAllowedDataObjectClasses(
             $baseClass,
             $this->getRecursivelyAddChildClass(),

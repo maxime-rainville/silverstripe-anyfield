@@ -21,7 +21,7 @@ class FormFactory extends LinkFormFactory
             throw new LogicException(sprintf('%s: DataObjectClass must be provided and must be an instance of DataObject', static::class));
         }
 
-        $fields = $dataObjectClass->scaffoldFormFields([]);
+        $fields = $dataObjectClass->getCMSFields();
         $fields->push(HiddenField::create('ID'));
         $fields->push(HiddenField::create('dataObjectClassKey')->setValue($context['DataObjectClassKey']));
         $this->extend('updateFormFields', $fields, $controller, $name, $context);
