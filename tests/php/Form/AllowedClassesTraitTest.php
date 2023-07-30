@@ -11,7 +11,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FormField;
 use SilverStripe\AnyField\Form\AllowedClassesTrait;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\LinkField\Models\EmailLink;
 use SilverStripe\LinkField\Models\ExternalLink;
 use SilverStripe\LinkField\Models\FileLink;
@@ -88,13 +88,13 @@ abstract class AllowedClassesTraitTest extends SapphireTest
         }
 
         $this->assertEquals(
-            DataObjectClassInfo::singleton()->getAllowedDataObjectClasses(
+            AnyService::singleton()->getAllowedDataObjectClasses(
                 Link::class,
                 $recursive,
                 $excluded
             ),
             $field->getAllowedDataObjectClasses(),
-            'getAllowedDataObjectClasses() relays the correct parameter to DataObjectClassInfo::getAllowedDataObjectClasses()'
+            'getAllowedDataObjectClasses() relays the correct parameter to AnyService::getAllowedDataObjectClasses()'
         );
     }
 

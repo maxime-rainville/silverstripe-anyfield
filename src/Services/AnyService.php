@@ -2,17 +2,26 @@
 
 namespace SilverStripe\AnyField\Services;
 
+use BadMethodCallException;
 use InvalidArgumentException;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 
-class DataObjectClassInfo
+/**
+ * Service for managing the class definitions for the AnyField.
+ */
+class AnyService
 {
     use Injectable;
 
+    /**
+     * Generate the Any Field definition for a given DataObject class.
+     */
     public static function generateFieldDefinition(string $className): array
     {
         $singleton = DataObject::singleton($className);
@@ -24,6 +33,9 @@ class DataObjectClassInfo
         ];
     }
 
+    /**
+     * Generate the Any Field description for a given DataObject class.
+     */
     public function generateDescription(string $className, array $data): array
     {
         $dummy = Injector::inst()->create($className, $data, DataObject::CREATE_MEMORY_HYDRATED);
@@ -36,13 +48,27 @@ class DataObjectClassInfo
         ];
     }
 
-    private function map(DataObject $value): array
+    /**
+     * Given a DataObject, return a map of its fields so it can be edited in a AnyField
+     */
+    public function map(DataObject $value): array
     {
         $data = $value->toMap();
         $data['dataObjectClassKey'] = $value->ClassName;
         return $data;
     }
 
+    /**
+     * Given a List of DataObject, return a map of its fields so it can be edited in a AnyField
+     */
+    public function mapList(SS_List $list): array
+    {
+        return array_map([$this, 'map'], $list->toArray());
+    }
+
+    /**
+     *
+     */
     public function jsonSerialize(DataObject $value): string
     {
         $data = $this->map($value);
@@ -51,8 +77,7 @@ class DataObjectClassInfo
 
     public function jsonSerializeList(SS_List $list): string
     {
-        $data = array_map([$this, 'map'], $list->toArray());
-        return json_encode($data);
+        return json_encode($$this->mapList($list));
     }
 
     public function setData(DataObject $record, array|string $data): DataObject
@@ -68,9 +93,6 @@ class DataObjectClassInfo
                 ));
             }
         }
-        //  elseif ($data instanceof JsonData) {
-        //     $data = $data->jsonSerialize();
-        // }
 
         if (!is_array($data)) {
             throw new InvalidArgumentException(sprintf('%s: Could not convert $data to an array.', static::class));

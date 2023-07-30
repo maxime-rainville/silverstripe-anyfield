@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\Form;
 use SilverStripe\AnyField\Form\FormFactory;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
 
 /**
  * Extensions to apply to ModalController so it knows how to handle the DynamicLink action.
@@ -60,7 +60,7 @@ class ModalController extends Extension
             throw new HTTPResponse_Exception(sprintf('key for class "%s" is required', static::class), 400);
         }
 
-        $type = DataObjectClassInfo::create()->generateFieldDefinition($dataObjectKey);
+        $type = AnyService::create()->generateFieldDefinition($dataObjectKey);
 
         if (!$type) {
             throw new HTTPResponse_Exception(sprintf('%s is not a valid ClassName', $type), 400);

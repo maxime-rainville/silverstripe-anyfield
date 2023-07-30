@@ -4,7 +4,7 @@ namespace SilverStripe\AnyField\GraphQL;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use InvalidArgumentException;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\GraphQL\Schema\DataObject\Resolver;
 use SilverStripe\AnyField\Type\Registry;
 
@@ -35,7 +35,7 @@ class AnyFieldDescriptionResolver extends Resolver
 
         // If we don't have a valid typeKey, we'll return a blank description
         if (!empty($data['dataObjectClassKey'])) {
-            $description = DataObjectClassInfo::create()->generateDescription(
+            $description = AnyService::create()->generateDescription(
                 $data['dataObjectClassKey'],
                 $data
             );

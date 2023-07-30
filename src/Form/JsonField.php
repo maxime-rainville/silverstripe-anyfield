@@ -7,7 +7,8 @@ use MaximeRainville\SilverstripeReact\ReactFormField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\AnyField\JsonData;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 
@@ -21,12 +22,16 @@ abstract class JsonField extends ReactFormField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
     protected $renderInput = true;
     protected $inputType = 'hidden';
-    protected array $props = [];
 
     public function setValue($value, $data = null)
     {
-        if ($value && $value instanceof DataObject && $value->isInDB()) {
-            $value = DataObjectClassInfo::singleton()->jsonSerialize($value);
+        if ($value && $value instanceof DataObject) {
+            if ($value->isInDB()) {
+                $value = AnyService::singleton()->map($value);
+            } else {
+                // We've been provided a singleton which means there's not object yet
+                $value = [];
+            }
         }
 
         return parent::setValue($value, $data);
@@ -45,31 +50,46 @@ abstract class JsonField extends ReactFormField
             return $this;
         }
 
-        $service = DataObjectClassInfo::singleton();
+        $service = AnyService::singleton();
         $dataValue = $this->dataValue();
         $value = is_string($dataValue) ? $this->parseString($this->dataValue()) : $dataValue;
 
         if ($class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname)) {
-            /** @var JsonData|DataObject $jsonDataObject */
-            $jsonDataObjectID = $record->{"{$fieldname}ID"};
+            /** @var JsonData|DataObject $dataObject */
+            $dataObjectID = $record->{"{$fieldname}ID"};
 
-            if ($jsonDataObjectID && $jsonDataObject = $record->$fieldname) {
+            if ($dataObjectID && $dataObject = $record->$fieldname) {
+                // There's already an object attached to the record
                 if ($value) {
-                    $jsonDataObject = $service->setData($jsonDataObject, $value);
-                    $jsonDataObject->write();
-                    $record->{"{$fieldname}ID"} = $jsonDataObject->ID;
+                    // We are updating the value
+                    if (!$dataObject->canEdit()) {
+                        Controller::curr()->httpError(403);
+                    }
+                    $dataObject = $service->setData($dataObject, $value);
+                    $this->validClassName($dataObject->ClassName);
+                    $dataObject->write();
+                    $record->{"{$fieldname}ID"} = $dataObject->ID;
                 } else {
-                    $jsonDataObject->delete();
+                    if (!$dataObject->canDelete()) {
+                        Controller::curr()->httpError(403);
+                    }
+                    // We are deleting the value
+                    $dataObject->delete();
                     $record->{"{$fieldname}ID"} = 0;
                 }
             } elseif ($value) {
-                $jsonDataObject = Injector::inst()->create($class);
-                $jsonDataObject = $service->setData($jsonDataObject, $value);
-                $jsonDataObject->write();
-                $record->{"{$fieldname}ID"} = $jsonDataObject->ID;
+                // There's no pre-existing object so we have to create a new one.
+                $dataObject = Injector::inst()->create($class);
+                $dataObject = $service->setData($dataObject, $value);
+                if (!$dataObject->canCreate()) {
+                    Controller::curr()->httpError(403);
+                }
+                $this->validClassName($dataObject->ClassName);
+                $dataObject->write();
+                $record->{"{$fieldname}ID"} = $dataObject->ID;
+            } else {
+                // There's no pre-existing object and no value to create one. The field is being left blank.
             }
-        } elseif ((DataObject::getSchema()->databaseField(get_class($record), $fieldname))) {
-            $record->{$fieldname} = $value;
         }
 
         return $this;
@@ -110,22 +130,21 @@ abstract class JsonField extends ReactFormField
         $value = $this->Value();
 
         if ($value instanceof DataObject) {
-            if ($value->isInDB()) {
-                $value = DataObjectClassInfo::singleton()->jsonSerialize($value);
-            } else {
-                $value = json_encode([], JSON_FORCE_OBJECT);
-            }
+            $value = AnyService::singleton()->map($value);
+        }
+
+        if (is_array($value)) {
+            $value = json_encode($value);
         }
 
         return $value;
     }
 
-    // public function getSchemaData()
-    // {
-    //     $schema = parent::getSchemaData();
+    /**
+     * Check if the class name is valid for this field.
+     *
+     * Should throw an exception if the class name is not valid.
+     */
+    abstract protected function validClassName(string $className): void;
 
-    //     $schema = array_merge($schema, $this->getProps());
-
-    //     return $schema;
-    // }
 }

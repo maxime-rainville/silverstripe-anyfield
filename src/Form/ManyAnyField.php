@@ -5,7 +5,8 @@ namespace SilverStripe\AnyField\Form;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Models\BaseElement;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\SS_List;
@@ -66,7 +67,7 @@ class ManyAnyField extends JsonField
 
             if (!empty($list)) {
                 // If we managed to find something matching a sensible list, we json serialize it.
-                $value = DataObjectClassInfo::singleton()->jsonSerializeList($list);
+                $value = AnyService::singleton()->mapList($list);
             }
         }
         // If value is not falsy, that means we got some JSON data back from the frontend.
@@ -87,33 +88,51 @@ class ManyAnyField extends JsonField
         }
 
         $dataValue = $this->dataValue();
-        $service = DataObjectClassInfo::singleton();
+        $service = AnyService::singleton();
 
         $value = is_string($dataValue) ? $this->parseString($dataValue) : $dataValue;
 
         /** @var HasMany|DataObject[] $links */
         if ($datalist = $record->$fieldname()) {
+
+            // Loop through all the existing data objects and update/delete them as needed.
             foreach ($datalist as $do) {
+                // As we process a dataobject we remove it from the value array
                 $data = $this->shiftRecordByID($value, $do->ID);
+
+
                 if ($data) {
+                    // Update an existing record
+                    if (!$do->canEdit()) {
+                        Controller::curr()->httpError(403);
+                    }
                     $do = $service->setData($do, $data);
+                    $this->validClassName($do->ClassName);
                     $datalist->add($do);
                     $do->write();
                 } else {
+                    // Delete an existing record
+                    if (!$do->canDelete()) {
+                        Controller::curr()->httpError(403);
+                    }
                     $do->delete();
                 }
             }
 
+            // Any remaining value in the array are new records that need to be created
             foreach ($value as $data) {
+                // Value created in the frontend have a non-sense ID, so we remove it.
                 unset($data['ID']);
                 $do = Injector::inst()->create($data['dataObjectClassKey']);
                 $do = $service->setData($do, $data);
+                if (!$do->canCreate()) {
+                    Controller::curr()->httpError(403);
+                }
+                $this->validClassName($do->ClassName);
                 $datalist->add($do);
                 $do->write();
             }
         }
-
-        // $this->setValue(DataObjectClassInfo::singleton()->jsonSerializeList($datalist));
 
         return $this;
     }
@@ -131,25 +150,6 @@ class ManyAnyField extends JsonField
         }
 
         return null;
-    }
-
-    public function getProps(): array
-    {
-        $props = parent::getProps();
-
-        $baseClass = $this->getBaseClass();
-
-        $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
-        if (empty($allowedDataObjectClasses)) {
-            throw new \InvalidArgumentException('AnyField must have at least one allowed DataObject class');
-        }
-
-        $props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
-        $singleton = DataObject::singleton($baseClass);
-        $props['baseDataObjectName'] = $singleton->i18n_singular_name();
-        $props['baseDataObjectIcon'] = $singleton->config()->get('icon');
-
-        return $props;
     }
 
     /**
@@ -186,7 +186,7 @@ class ManyAnyField extends JsonField
         $value = $this->Value();
 
         if ($value instanceof SS_List) {
-            $value = DataObjectClassInfo::singleton()->jsonSerializeList($value);
+            $value = AnyService::singleton()->jsonSerializeList($value);
         } elseif (is_array($value)) {
             $value = json_encode($value);
         }

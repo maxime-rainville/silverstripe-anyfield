@@ -5,7 +5,7 @@ namespace SilverStripe\AnyField\Form;
 use BadMethodCallException;
 use Psr\Container\NotFoundExceptionInterface;
 use InvalidArgumentException;
-use SilverStripe\AnyField\Services\DataObjectClassInfo;
+use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 
@@ -100,16 +100,50 @@ trait AllowedClassesTrait
         return $this;
     }
 
-    private abstract function guessBaseClass(): ?string;
+    protected abstract function guessBaseClass(): ?string;
 
     public function getAllowedDataObjectClasses(): array
     {
         $baseClass = $this->getBaseClass();
 
-        return DataObjectClassInfo::singleton()->getAllowedDataObjectClasses(
+        return AnyService::singleton()->getAllowedDataObjectClasses(
             $baseClass,
             $this->getRecursivelyAddChildClass(),
             $this->getExcludeClasses()
         );
+    }
+
+    public function getProps(): array
+    {
+        $props = parent::getProps();
+
+        $baseClass = $this->getBaseClass();
+
+        $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
+        if (empty($allowedDataObjectClasses)) {
+            $path = explode('\\', __CLASS__);
+            throw new \InvalidArgumentException(
+                sprintf('%s must have at least one allowed DataObject class', array_pop($path))
+            );
+        }
+
+        $props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
+        $singleton = DataObject::singleton($baseClass);
+        $props['baseDataObjectName'] = $singleton->i18n_singular_name();
+        $props['baseDataObjectIcon'] = $singleton->config()->get('icon');
+
+        return $props;
+    }
+
+    protected function validClassName(string $className): void
+    {
+        $valid = array_keys($this->getAllowedDataObjectClasses());
+        if (!in_array($className, $valid)) {
+            throw new \InvalidArgumentException(sprintf(
+                '%s is not a valid DataObject class for this field. Valid classes are: %s',
+                $className,
+                implode(', ', $valid)
+            ));
+        }
     }
 }

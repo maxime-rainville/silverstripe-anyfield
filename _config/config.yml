@@ -20,5 +20,5 @@ SilverStripe\CMS\Forms\AnchorSelectorField:
 
 
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\AnyField\Services\DataObjectClassInfo:
-    class: SilverStripe\AnyField\Services\DataObjectClassInfo
+  SilverStripe\AnyField\Services\AnyService:
+    class: SilverStripe\AnyField\Services\AnyService
