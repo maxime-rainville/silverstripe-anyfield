@@ -47,5 +47,9 @@ class AnyField extends JsonField
         return $class;
     }
 
+    public function InitialHTML()
+    {
+        return $this->renderWith(static::class . '_InitialHTML');
+    }
 
 }

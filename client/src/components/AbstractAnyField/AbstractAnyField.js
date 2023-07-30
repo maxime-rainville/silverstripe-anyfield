@@ -3,6 +3,7 @@ import { loadComponent } from 'lib/Injector';
 import PropTypes from 'prop-types';
 import AllowedDataObjectClass from '../../types/AllowedDataObjectClass';
 import AnyFieldSummary from '../../types/AnyFieldSummary';
+import AnyFieldBox from '../AnyFieldBox/AnyFieldBox';
 
 /**
  * Underlying implementation of the AnyField. This is used for both the Single AnyField
@@ -14,7 +15,7 @@ const AbstractAnyField = ({
 }) => {
   // Render a loading indicator if we're still fetching some data from the server
   if (loading) {
-    return <Loading />;
+    return <AnyFieldBox><Loading /></AnyFieldBox>;
   }
 
   // When editing is true, we display a modal to let the user edit the link data
