@@ -135,19 +135,21 @@ class ManyAnyField extends JsonField
 
     public function getProps(): array
     {
+        $props = parent::getProps();
+
         $baseClass = $this->getBaseClass();
 
-        $allowedDataObjectClasses = DataObjectClassInfo::singleton()->getAllowedDataObjectClasses($baseClass, $this->getRecursivelyAddChildClass(), $this->getExcludeClasses());
+        $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
         if (empty($allowedDataObjectClasses)) {
             throw new \InvalidArgumentException('AnyField must have at least one allowed DataObject class');
         }
 
-        $this->props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
+        $props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
         $singleton = DataObject::singleton($baseClass);
-        $this->props['baseDataObjectName'] = $singleton->i18n_singular_name();
-        $this->props['baseDataObjectIcon'] = $singleton->config()->get('icon');
+        $props['baseDataObjectName'] = $singleton->i18n_singular_name();
+        $props['baseDataObjectIcon'] = $singleton->config()->get('icon');
 
-        return parent::getProps();
+        return $props;
     }
 
     /**
@@ -177,5 +179,18 @@ class ManyAnyField extends JsonField
         $class = DataObject::getSchema()->hasManyComponent(get_class($record), $fieldname);
         return $class;
 
+    }
+
+    public function InputValue(): string
+    {
+        $value = $this->Value();
+
+        if ($value instanceof SS_List) {
+            $value = DataObjectClassInfo::singleton()->jsonSerializeList($value);
+        } elseif (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        return $value;
     }
 }

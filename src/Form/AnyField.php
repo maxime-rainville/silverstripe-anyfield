@@ -19,18 +19,10 @@ class AnyField extends JsonField
 
     protected $schemaComponent = 'AnyField';
 
-    public function __construct(string $name, string $title = null, $value = null)
-    {
-        parent::__construct($name, $title, $value);
-    }
-
-    public function setValue($value, $data = null)
-    {
-        return parent::setValue($value, $data);
-    }
-
     public function getProps(): array
     {
+        $props = parent::getProps();
+
         $baseClass = $this->getBaseClass();
 
         $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
@@ -38,19 +30,13 @@ class AnyField extends JsonField
             throw new \InvalidArgumentException('AnyField must have at least one allowed DataObject class');
         }
 
-        $this->props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
+        $props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
         $singleton = DataObject::singleton($baseClass);
-        $this->props['baseDataObjectName'] = $singleton->i18n_singular_name();
-        $this->props['baseDataObjectIcon'] = $singleton->config()->get('icon');
+        $props['baseDataObjectName'] = $singleton->i18n_singular_name();
+        $props['baseDataObjectIcon'] = $singleton->config()->get('icon');
 
-        return parent::getProps();
+        return $props;
     }
-
-    public function getPropsJSON(): string
-    {
-        return parent::getPropsJSON();
-    }
-
 
     /**
      * Try to guess what class we are editing

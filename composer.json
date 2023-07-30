@@ -7,7 +7,8 @@
         "silverstripe/framework": "^5",
         "silverstripe/admin": "^2",
         "league/uri": "^7",
-        "league/uri-components": "^7"
+        "league/uri-components": "^7",
+        "maxime-rainville/silverstripe-react": "^0.1"
     },
     "require-dev": {
         "silverstripe/recipe-testing": "^3",

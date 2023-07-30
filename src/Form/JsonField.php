@@ -3,6 +3,7 @@
 namespace SilverStripe\AnyField\Form;
 
 use InvalidArgumentException;
+use MaximeRainville\SilverstripeReact\ReactFormField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\AnyField\JsonData;
@@ -15,9 +16,10 @@ use SilverStripe\ORM\DataObjectInterface;
  *
  * It will output a hidden input with serialize JSON Data.
  */
-abstract class JsonField extends FormField
+abstract class JsonField extends ReactFormField
 {
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
+    protected $renderInput = true;
     protected $inputType = 'hidden';
     protected array $props = [];
 
@@ -98,35 +100,32 @@ abstract class JsonField extends FormField
         return $data;
     }
 
-    public function getProps(): array
+    public function getComponent(): string
     {
-        return $this->props;
+        return $this->schemaComponent;
     }
 
-    public function getPropsJSON(): string
+    public function InputValue(): string
     {
-        return json_encode($this->getProps());
+        $value = $this->Value();
+
+        if ($value instanceof DataObject) {
+            if ($value->isInDB()) {
+                $value = DataObjectClassInfo::singleton()->jsonSerialize($value);
+            } else {
+                $value = json_encode([], JSON_FORCE_OBJECT);
+            }
+        }
+
+        return $value;
     }
 
-    public function getAttributes()
-    {
-        $attrs = parent::getAttributes();
+    // public function getSchemaData()
+    // {
+    //     $schema = parent::getSchemaData();
 
-        $attrs['data-props'] = json_encode($this->getProps);
+    //     $schema = array_merge($schema, $this->getProps());
 
-        $attrs = array_merge($attrs, $this->attributes);
-
-        $this->extend('updateAttributes', $attributes);
-
-        return $attrs;
-    }
-
-    public function getSchemaData()
-    {
-        $schema = parent::getSchemaData();
-
-        $schema = array_merge($schema, $this->getProps());
-
-        return $schema;
-    }
+    //     return $schema;
+    // }
 }

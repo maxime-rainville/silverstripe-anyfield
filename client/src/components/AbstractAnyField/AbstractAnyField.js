@@ -28,7 +28,7 @@ const AbstractAnyField = ({
   // When the use clears the link data, we call onchange with an empty object
   const onClear = (event, recordId) => {
     if (typeof onChange === 'function') {
-      onChange(event, { id, value: clearData(recordId) });
+      onChange(event, { id, value: JSON.stringify(clearData(recordId)) });
     }
   };
 
@@ -52,7 +52,7 @@ const AbstractAnyField = ({
     const { SecurityID, action_insert, ...newDataObject } = submittedData;
     if (typeof onChange === 'function') {
       // onChange expect an event object which we don't have
-      onChange(undefined, { id, value: updateData(newDataObject) });
+      onChange(undefined, { id, value: JSON.stringify(updateData(newDataObject)) });
     }
     // Close the modal
     setEditingId(false);
