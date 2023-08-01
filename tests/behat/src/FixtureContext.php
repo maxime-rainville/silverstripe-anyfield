@@ -33,7 +33,7 @@ class FixtureContext extends BaseFixtureContext
     public function linkFieldShouldBeEmpty(string $label)
     {
         $field = $this->iShouldSeeALinkField($label);
-        $toggle = $field->find('css', '.link-menu__toggle');
+        $toggle = $field->find('css', '.any-picker-menu__toggle');
 
         Assert::assertSame('Add Link', $toggle->getText(), "Link field $label is not empty");
     }
@@ -47,8 +47,8 @@ class FixtureContext extends BaseFixtureContext
     public function linkFieldShouldBeContain(string $label, string $linkTitle, string $linkDescription)
     {
         $field = $this->iShouldSeeALinkField($label);
-        $title = $field->find('css', '.link-title__title');
-        $description = $field->find('css', '.link-title__type');
+        $title = $field->find('css', '.any-picker-title__title');
+        $description = $field->find('css', '.any-picker-title__type');
 
         Assert::assertSame($linkTitle, $title->getText(), "$label should contain $linkTitle");
         Assert::assertSame($linkDescription, $description->getText(), "$label should contain $linkDescription");
@@ -63,7 +63,7 @@ class FixtureContext extends BaseFixtureContext
     public function EditLinkField(string $label)
     {
         $field = $this->iShouldSeeALinkField($label);
-        $toggle = $field->find('css', 'button.link-menu__toggle, button.link-title');
+        $toggle = $field->find('css', 'button.any-picker-menu__toggle, button.any-picker-title');
 
         Assert::assertNotNull($toggle);
         $toggle->click();
@@ -146,7 +146,6 @@ class FixtureContext extends BaseFixtureContext
                 Assert::assertCount(1, $label, "Found more than one element containing the phrase \"$locator\"");
                 $label = array_shift($label);
                 $fieldId = $label->getAttribute('for');
-
             }
         }
 
@@ -154,7 +153,7 @@ class FixtureContext extends BaseFixtureContext
             return null;
         }
 
-        $element = $page->find('css', '.link-box[data-linkfield-id=\'' . $fieldId . '\']');
+        $element = $page->find('css', '.any-field-box[data-anyfield-id=\'' . $fieldId . '\']');
         return $element;
     }
 
@@ -178,7 +177,7 @@ class FixtureContext extends BaseFixtureContext
         $field = $this->getLinkField($locator);
         Assert::assertNotNull($field, "Link field $$locator does not exist");
 
-        $button = $field->find('css', '.link-title__clear');
+        $button = $field->find('css', '.any-picker-title__clear');
         Assert::assertNotNull($button, "Could not find clear button in $locator LinkField");
 
         return $button;
