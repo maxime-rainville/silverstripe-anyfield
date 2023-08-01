@@ -17,52 +17,53 @@ class FixtureContext extends BaseFixtureContext
 {
 
 
-    public function iShouldSeeALinkField(string $label)
+    public function iShouldSeeAAnyField(string $label)
     {
-        $field = $this->getLinkField($label);
+        $field = $this->getAnyField($label);
         Assert::assertNotNull($field, sprintf('HTML field "%s" not found', $label));
         return $field;
     }
 
     /**
      *
-     * @Then /^I should see an empty "(.+?)" LinkField/
+     * @Then /^I should see an empty "(.+?)" AnyField/
      * @param string $not
      * @param string $tabLabel
      */
-    public function linkFieldShouldBeEmpty(string $label)
+    public function AnyFieldShouldBeEmpty(string $label)
     {
-        $field = $this->iShouldSeeALinkField($label);
+        $field = $this->iShouldSeeAAnyField($label);
         $toggle = $field->find('css', '.any-picker-menu__toggle');
 
-        Assert::assertSame('Add Link', $toggle->getText(), "Link field $label is not empty");
+        Assert::assertSame('Add Link', $toggle->getText(), "AnyField field $label is not empty");
     }
 
     /**
      *
-     * @Then /^I should see a "(.+?)" LinkField filled with "(.+?)" and a description of "(.+?)"/
+     * @Then /^I should see a "(.+?)" AnyField filled with "(.+?)" and a description of "(.+?)"/
      * @param string $not
      * @param string $tabLabel
      */
-    public function linkFieldShouldBeContain(string $label, string $linkTitle, string $linkDescription)
+    public function AnyFieldShouldBeContain(string $label, string $title, string $description)
     {
-        $field = $this->iShouldSeeALinkField($label);
-        $title = $field->find('css', '.any-picker-title__title');
-        $description = $field->find('css', '.any-picker-title__type');
+        $field = $this->iShouldSeeAAnyField($label);
+        $titleNode = $field->find('css', '.any-picker-title__title');
+        /** @var NodeElement $description */
+        $descriptionNode = $field->find('css', '.any-picker-title__type');
 
-        Assert::assertSame($linkTitle, $title->getText(), "$label should contain $linkTitle");
-        Assert::assertSame($linkDescription, $description->getText(), "$label should contain $linkDescription");
+        Assert::assertSame($title, $titleNode->getText(), "$label should contain $title");
+        Assert::assertSame($description, $descriptionNode->getText(), "$label should contain $description");
     }
 
     /**
      *
-     * @Then /^I edit the "(.+?)" LinkField/
+     * @Then /^I edit the "(.+?)" AnyField/
      * @param string $not
      * @param string $tabLabel
      */
-    public function EditLinkField(string $label)
+    public function EditAnyField(string $label)
     {
-        $field = $this->iShouldSeeALinkField($label);
+        $field = $this->iShouldSeeAAnyField($label);
         $toggle = $field->find('css', 'button.any-picker-menu__toggle, button.any-picker-title');
 
         Assert::assertNotNull($toggle);
@@ -71,57 +72,57 @@ class FixtureContext extends BaseFixtureContext
 
     /**
      *
-     * @Then /^I should see an option to add a "(.+?)" link to the "(.+?)" LinkField/
+     * @Then /^I should see an option to add a "(.+?)" item to the "(.+?)" AnyField/
      * @param string $not
      * @param string $tabLabel
      */
-    public function iShouldSeeAnOptionToAddLink(string $type, string $label)
+    public function iShouldSeeAnOptionToAddItem(string $type, string $label)
     {
-        $option = $this->getLinkFieldOption($label, $type);
-        Assert::assertNotNull($option, "Link field $type is not there");
+        $option = $this->getAnyFieldOption($label, $type);
+        Assert::assertNotNull($option, "AnyField $type is not there");
     }
 
     /**
      *
-     * @Then /^I add a "(.+?)" link to the "(.+?)" LinkField/
+     * @Then /^I add a "(.+?)" item to the "(.+?)" AnyField/
      * @param string $not
      * @param string $tabLabel
      */
-    public function iAddLinkToLinkField(string $type, string $label)
+    public function iAddItemToAnyField(string $type, string $label)
     {
-        $option = $this->getLinkFieldOption($label, $type);
+        $option = $this->getAnyFieldOption($label, $type);
         $option->click();
     }
 
     /**
      *
-     * @Then /^I should see a "(.+?)" link modal/
+     * @Then /^I should see a "(.+?)" AnyField modal/
      * @param string $not
      * @param string $tabLabel
      */
-    public function iShouldSeeLinkModal(string $type)
+    public function iShouldSeeModal(string $type)
     {
-        $modal = $this->getLinkModal();
+        $modal = $this->getModal();
         $title = $modal->find('css', '.modal-title');
-        Assert::assertSame($type . ' Link', $title->getText(), "Link modal is not there");
+        Assert::assertSame($type, $title->getText(), "AnyField modal is not there");
     }
 
     /**
-     * @Then /^I should see a clear button in the "(.+?)" LinkField/
+     * @Then /^I should see a clear button in the "(.+?)" AnyField/
      * @param string $title
      */
-    public function iShouldSeeClearLinkButton(string $title): void
+    public function iShouldSeeClearButton(string $title): void
     {
-        $this->getClearLinkButton($title);
+        $this->getClearButton($title);
     }
 
     /**
-     * @Then /^I clear the "(.+?)" LinkField/
+     * @Then /^I clear the "(.+?)" AnyField/
      * @param string $title
      */
-    public function iClearLinkField(string $title): void
+    public function iClearAnyField(string $title): void
     {
-        $this->getClearLinkButton($title)->click();
+        $this->getClearButton($title)->click();
     }
 
     /**
@@ -129,7 +130,7 @@ class FixtureContext extends BaseFixtureContext
      *
      * @param string $locator Raw html field identifier as passed from
      */
-    protected function getLinkField(string $locator): ?NodeElement
+    protected function getAnyField(string $locator): ?NodeElement
     {
         $locator = str_replace('\\"', '"', $locator ?? '');
         $page = $this->getMainContext()->getSession()->getPage();
@@ -157,14 +158,14 @@ class FixtureContext extends BaseFixtureContext
         return $element;
     }
 
-    protected function getLinkFieldOption(string $locator, string $option): ?NodeElement
+    protected function getAnyFieldOption(string $locator, string $option): ?NodeElement
     {
-        $field = $this->getLinkField($locator);
-        Assert::assertNotNull($option, "Link field $$locator does not exist");
+        $field = $this->getAnyField($locator);
+        Assert::assertNotNull($option, "AnyField field $$locator does not exist");
 
         $buttons = $field->findAll('css', '.dropdown-item');
         foreach ($buttons as $button) {
-            if ($button->getText() === $option . ' Link') {
+            if ($button->getText() === $option) {
                 return $button;
             }
         }
@@ -172,13 +173,13 @@ class FixtureContext extends BaseFixtureContext
         return null;
     }
 
-    protected function getClearLinkButton(string $locator): NodeElement
+    protected function getClearButton(string $locator): NodeElement
     {
-        $field = $this->getLinkField($locator);
-        Assert::assertNotNull($field, "Link field $$locator does not exist");
+        $field = $this->getAnyField($locator);
+        Assert::assertNotNull($field, "AnyField $$locator does not exist");
 
         $button = $field->find('css', '.any-picker-title__clear');
-        Assert::assertNotNull($button, "Could not find clear button in $locator LinkField");
+        Assert::assertNotNull($button, "Could not find clear button in $locator AnyField");
 
         return $button;
     }
@@ -187,7 +188,7 @@ class FixtureContext extends BaseFixtureContext
      * @Then I should see a modal titled :title
      * @param string $title
      */
-    protected function getLinkModal(): ?NodeElement
+    protected function getModal(): ?NodeElement
     {
         $page = $this->getMainContext()->getSession()->getPage();
         return $page->find('css', '[role=dialog]');
