@@ -4,7 +4,7 @@ namespace SilverStripe\AnyField\Tests;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\AnyField\Models\Link;
+use SilverStripe\LinkField\Models\Link;
 
 class LinkOwner extends DataObject
 {

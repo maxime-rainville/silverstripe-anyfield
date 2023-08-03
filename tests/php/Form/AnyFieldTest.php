@@ -8,7 +8,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
 use SilverStripe\LinkField\Models\Link;
 
-class AnyFieldTest extends AllowedClassesTraitTest
+class AnyFieldTest extends AllowedClassesTraitTestCase
 {
 
     protected static $extra_dataobjects = [

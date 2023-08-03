@@ -54,7 +54,9 @@ class ManyAnyField extends JsonField
 
     public function setValue($value, $data = null)
     {
-        if (empty($value)) {
+        if (is_string($value) && !empty($value)) {
+            $value = $this->parseString($value);
+        } elseif (empty($value)) {
             // If the value is empty, we convert our list to a JSON string with all our link data.
             // Scenario: We're about to render the data for the front end
             $list = $this->getList();

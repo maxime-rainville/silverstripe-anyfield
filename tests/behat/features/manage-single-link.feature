@@ -1,7 +1,7 @@
 @javascript @retry
-Feature: Manage Single Link
+Feature: Manage Single item
   As a cms author
-  I want to manage link in the CMS
+  I want to manage single item using the AnyField
 
   Background:
     Given a "page" "About Us" has the "Content" "<p>My content</p>"

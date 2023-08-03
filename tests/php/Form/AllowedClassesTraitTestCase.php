@@ -19,7 +19,7 @@ use SilverStripe\LinkField\Models\Link;
 use SilverStripe\LinkField\Models\PhoneLink;
 use SilverStripe\LinkField\Models\SiteTreeLink;
 
-abstract class AllowedClassesTraitTest extends SapphireTest
+abstract class AllowedClassesTraitTestCase extends SapphireTest
 {
 
     /**
