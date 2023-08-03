@@ -1,17 +1,19 @@
 <?php
 
-namespace SilverStripe\Link\Tests\Form;
+namespace SilverStripe\AnyField\Tests\GraphQL;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\AnyField\GraphQL\LinkDescriptionResolver;
+use SilverStripe\AnyField\GraphQL\AnyFieldDescriptionResolver;
+use SilverStripe\LinkField\Models\ExternalLink;
+use SilverStripe\LinkField\Models\EmailLink;
 
-class AnyDescriptionResolverTest extends SapphireTest
+class AnyFieldDescriptionResolverTest extends SapphireTest
 {
 
     public function testBadJsonString()
     {
         $this->expectException(\InvalidArgumentException::class);
-        LinkDescriptionResolver::resolve([], ['dataStr' => 'non-sense'], [], null);
+        AnyFieldDescriptionResolver::resolve([], ['dataStr' => 'non-sense'], [], null);
     }
 
     public function testListOfLinks()
@@ -21,15 +23,14 @@ class AnyDescriptionResolverTest extends SapphireTest
                 'ID' => '1',
                 'Title' => 'My update link',
                 'ExternalUrl' => 'http://www.google.co.nz',
-                'typeKey' => 'external',
+                'dataObjectClassKey' => ExternalLink::class,
             ],
             [
                 'Title' => 'My new email address',
                 'OpenInNew' => 1,
                 'Email' => 'maxime@example.com',
                 'ID' => 'aebc8afd-7fbc-4503-bc8f-3fd459a3f2de',
-                'typeKey' => 'email',
-                'isNew' => true
+                'dataObjectClassKey' => EmailLink::class
             ]
         ];
         $expected = [
@@ -46,7 +47,7 @@ class AnyDescriptionResolverTest extends SapphireTest
         ];
         $this->assertEquals(
             $expected,
-            LinkDescriptionResolver::resolve([], ['dataStr' => json_encode($links)], [], null),
+            AnyFieldDescriptionResolver::resolve([], ['dataStr' => json_encode($links)], [], null),
             'Link list data should have been resolved to the expected description'
         );
     }
@@ -57,10 +58,10 @@ class AnyDescriptionResolverTest extends SapphireTest
             'ID' => '1',
             'Title' => 'My update link',
             'ExternalUrl' => 'http://www.google.co.nz',
-            'typeKey' => 'external',
+            'dataObjectClassKey' => ExternalLink::class,
         ];
 
-        $results = LinkDescriptionResolver::resolve([], ['dataStr' => json_encode($link)], [], null);
+        $results = AnyFieldDescriptionResolver::resolve([], ['dataStr' => json_encode($link)], [], null);
         $expected = [
             [
                 'id' => '1',
@@ -70,7 +71,7 @@ class AnyDescriptionResolverTest extends SapphireTest
         ];
         $this->assertEquals(
             $expected,
-            LinkDescriptionResolver::resolve([], ['dataStr' => json_encode($link)], [], null),
+            AnyFieldDescriptionResolver::resolve([], ['dataStr' => json_encode($link)], [], null),
             'Single Link data should have been resolved to the expected description'
         );
     }
