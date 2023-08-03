@@ -51,5 +51,4 @@ class AnyField extends JsonField
     {
         return $this->renderWith(static::class . '_InitialHTML');
     }
-
 }

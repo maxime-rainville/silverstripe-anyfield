@@ -146,5 +146,4 @@ abstract class JsonField extends ReactFormField
      * Should throw an exception if the class name is not valid.
      */
     abstract protected function validClassName(string $className): void;
-
 }

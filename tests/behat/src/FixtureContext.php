@@ -192,6 +192,5 @@ class FixtureContext extends BaseFixtureContext
     {
         $page = $this->getMainContext()->getSession()->getPage();
         return $page->find('css', '[role=dialog]');
-
     }
 }

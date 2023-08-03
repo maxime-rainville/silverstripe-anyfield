@@ -97,5 +97,4 @@ abstract class AllowedClassesTraitTestCase extends SapphireTest
             'getAllowedDataObjectClasses() relays the correct parameter to AnyService::getAllowedDataObjectClasses()'
         );
     }
-
 }

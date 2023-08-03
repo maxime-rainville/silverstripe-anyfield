@@ -96,7 +96,6 @@ class ManyAnyField extends JsonField
 
         /** @var HasMany|DataObject[] $links */
         if ($datalist = $record->$fieldname()) {
-
             // Loop through all the existing data objects and update/delete them as needed.
             foreach ($datalist as $do) {
                 // As we process a dataobject we remove it from the value array
@@ -180,7 +179,6 @@ class ManyAnyField extends JsonField
 
         $class = DataObject::getSchema()->hasManyComponent(get_class($record), $fieldname);
         return $class;
-
     }
 
     public function InputValue(): string

@@ -100,7 +100,7 @@ trait AllowedClassesTrait
         return $this;
     }
 
-    protected abstract function guessBaseClass(): ?string;
+    abstract protected function guessBaseClass(): ?string;
 
     public function getAllowedDataObjectClasses(): array
     {

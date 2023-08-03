@@ -12,7 +12,6 @@ use SilverStripe\LinkField\Models\ExternalLink;
 use SilverStripe\LinkField\Models\EmailLink;
 use SilverStripe\AnyField\Services\AnyService;
 
-
 class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 {
 
