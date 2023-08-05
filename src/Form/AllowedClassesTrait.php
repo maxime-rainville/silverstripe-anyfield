@@ -6,8 +6,8 @@ use BadMethodCallException;
 use Psr\Container\NotFoundExceptionInterface;
 use InvalidArgumentException;
 use SilverStripe\AnyField\Services\AnyService;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * Encapsulate some shared logic between AnyField and ManyAnyField for tracking base classes
@@ -23,14 +23,15 @@ trait AllowedClassesTrait
      * Retrieve the current BaseClass. If the BaseClass has not been explicitly set, try to guess what it is by looking
      * at the relation the field is pointed at. Returns a blank string if the BaseClass can not be ascertained.
      */
-    public function getBaseClass(): string
+    public function getBaseClass(?DataObjectInterface $record = null): string
     {
         if ($this->baseClass) {
             return $this->baseClass;
         }
 
-        return (string)$this->guessBaseClass();
+        return (string)$this->guessBaseClass($record);
     }
+
 
     /**
      * Explicitly set the BaseClass for this any Field
@@ -100,11 +101,16 @@ trait AllowedClassesTrait
         return $this;
     }
 
-    abstract protected function guessBaseClass(): ?string;
+    /**
+     * Try to guess the base class for our any field
+     * @param null|DataObjectInterface $record
+     * @return null|string
+     */
+    abstract protected function guessBaseClass(?DataObjectInterface $record = null): ?string;
 
-    public function getAllowedDataObjectClasses(): array
+    public function getAllowedDataObjectClasses(?DataObjectInterface $record = null): array
     {
-        $baseClass = $this->getBaseClass();
+        $baseClass = $this->getBaseClass($record);
 
         return AnyService::singleton()->getAllowedDataObjectClasses(
             $baseClass,
@@ -135,9 +141,9 @@ trait AllowedClassesTrait
         return $props;
     }
 
-    protected function validClassName(string $className): void
+    protected function validClassName(string $className, ?DataObjectInterface $record = null): void
     {
-        $valid = array_keys($this->getAllowedDataObjectClasses());
+        $valid = array_keys($this->getAllowedDataObjectClasses($record));
         if (!in_array($className, $valid)) {
             throw new \InvalidArgumentException(sprintf(
                 '%s is not a valid DataObject class for this field. Valid classes are: %s',

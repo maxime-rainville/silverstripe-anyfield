@@ -69,7 +69,7 @@ abstract class JsonField extends ReactFormField
                         Controller::curr()->httpError(403);
                     }
                     $dataObject = $service->setData($dataObject, $value);
-                    $this->validClassName($dataObject->ClassName);
+                    $this->validClassName($dataObject->ClassName, $record);
                     $dataObject->write();
                     $record->{"{$fieldname}ID"} = $dataObject->ID;
                 } else {
@@ -87,7 +87,7 @@ abstract class JsonField extends ReactFormField
                 if (!$dataObject->canCreate()) {
                     Controller::curr()->httpError(403);
                 }
-                $this->validClassName($dataObject->ClassName);
+                $this->validClassName($dataObject->ClassName, $record);
                 $dataObject->write();
                 $record->{"{$fieldname}ID"} = $dataObject->ID;
             } else {
@@ -148,5 +148,5 @@ abstract class JsonField extends ReactFormField
      *
      * Should throw an exception if the class name is not valid.
      */
-    abstract protected function validClassName(string $className): void;
+    abstract protected function validClassName(string $className, ?DataObjectInterface $record): void;
 }
