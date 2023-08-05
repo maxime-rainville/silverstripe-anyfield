@@ -3,6 +3,7 @@
 namespace SilverStripe\AnyField\Form;
 
 use InvalidArgumentException;
+use LogicException;
 use MaximeRainville\SilverstripeReact\ReactFormField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
@@ -50,12 +51,11 @@ abstract class JsonField extends ReactFormField
         $fieldname = $this->getName();
 
         if (!$fieldname) {
-            return $this;
+            throw new LogicException(sprintf('%s: Field must have a name', static::class));
         }
 
         $service = AnyService::singleton();
-        $dataValue = $this->dataValue();
-        $value = is_string($dataValue) ? $this->parseString($this->dataValue()) : $dataValue;
+        $value = $this->dataValue();
 
         if ($class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname)) {
             /** @var JsonData|DataObject $dataObject */

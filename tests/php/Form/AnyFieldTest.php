@@ -67,5 +67,29 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
         }
     }
 
+    public function testSaveNew(): void
+    {
+        $field = $this->getAnyField();
+        $field->setName('Link');
+
+        $this->assertEquals(
+            '',
+            $field->getBaseClass(),
+            'When base class is not guessable, a blank string is returned'
+        );
+
+        $form = new Form(Controller::curr(), 'Form', FieldList::create($field));
+        $parentRecord = AnyFieldTest\SingleLink::create();
+        $form->loadDataFrom($parentRecord);
+
+        $field->setValue([
+            'ClassName' => ExternalLink::class,
+            'Title' => 'Silverstripe CMS',
+            'URL' => 'https://silverstripe.org',
+        ]);
+
+        $field->saveInto($parentRecord);
+    }
+
 
 }

@@ -2,12 +2,8 @@
 
 namespace SilverStripe\AnyField\Form;
 
-use Behat\Mink\Element\Element;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
-use DNADesign\Elemental\Forms\EditFormFactory;
 use DNADesign\Elemental\Models\BaseElement;
-use SilverStripe\AnyField\Services\AnyService;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -42,6 +38,7 @@ class AnyField extends JsonField
             $fakeData = array_flip($fakeData);
             $fieldname = $fakeData[0];
         };
+
 
         $class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname);
         return $class;
