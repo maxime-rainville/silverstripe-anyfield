@@ -5,7 +5,6 @@ namespace SilverStripe\AnyField\Form;
 use LogicException;
 use SilverStripe\Admin\Forms\LinkFormFactory;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\AnyField\Type\Type;
 use SilverStripe\ORM\DataObject;
 
 /**

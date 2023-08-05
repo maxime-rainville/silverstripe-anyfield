@@ -14,9 +14,7 @@ class LeftAndMain extends Extension
     public function init()
     {
         Requirements::add_i18n_javascript('maxime-rainville/anyfield:client/lang', false, true);
-        Requirements::javascript('silverstripe/admin:client/dist/js/bundle.js');
-        Requirements::javascript('silverstripe/asset-admin:client/dist/js/bundle.js');
-        Requirements::javascript('maxime-rainville/anyfield:client/dist/js/bundle.js');
+        Requirements::javascript('maxime-rainville/anyfield:client/dist/js/bundle.js', ['defer' => true]);
         Requirements::css('maxime-rainville/anyfield:client/dist/styles/bundle.css');
     }
 

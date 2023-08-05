@@ -7,6 +7,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
 use SilverStripe\LinkField\Models\Link;
+use SilverStripe\LinkField\Models\ExternalLink;
+use SilverStripe\AnyField\Services\AnyService;
 
 class AnyFieldTest extends AllowedClassesTraitTestCase
 {
@@ -15,12 +17,12 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
         AnyFieldTest\SingleLink::class,
     ];
 
+    protected static $fixture_file = '../LinkModelTest.yml';
+
     protected function getAnyField(): FormField
     {
         return new AnyField('AnyField');
     }
-
-
 
     public function testGuessBaseClass()
     {
@@ -41,4 +43,29 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
             'When the form field is assigned to a Form with a record, the base class can be guessed'
         );
     }
+
+    public function testSetValue()
+    {
+        $do = $this->objFromFixture(ExternalLink::class, 'link-1');
+        $map = AnyService::singleton()->map($do);
+        $testcases = [
+            'DataObject' => [$do, $map],
+            'Singleton' => [AnyFieldTest\SingleLink::create(), []],
+            'Array' => [$map, $map],
+            'JSON' => [json_encode($map), $map],
+        ];
+
+        foreach ($testcases as $key => [$value, $expected]) {
+            $field = $this->getAnyField();
+            $field->setValue($value);
+
+            $this->assertEquals(
+                $expected,
+                $field->Value(),
+                "Setting AnyField value form $key works"
+            );
+        }
+    }
+
+
 }

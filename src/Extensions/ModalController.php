@@ -27,11 +27,11 @@ class ModalController extends Extension
     ];
 
     /**
-     * Builds and returns the external link form
+     * Builds and returns a form schema for any field
      *
      * @return Form
      */
-    public function AnyFieldForm()
+    public function AnyFieldForm(): Form
     {
         /** @var OwnerController $owner */
         $owner = $this->getOwner();
@@ -66,8 +66,10 @@ class ModalController extends Extension
             throw new HTTPResponse_Exception(sprintf('%s is not a valid ClassName', $type), 400);
         }
 
+        $data = $this->getData();
+
         return [
-            'Data' => $this->getData(),
+            'Data' => $data,
             'DataObjectClass' => $type,
             'DataObjectClassKey' => $dataObjectKey,
             'RequireLinkText' => false
@@ -89,7 +91,7 @@ class ModalController extends Extension
             if (json_last_error() === JSON_ERROR_NONE) {
                 $data = $parsedData;
             } else {
-                throw new InvalidArgumentException(json_last_error_msg());
+                throw new HTTPResponse_Exception('Could not parse JSON data for form schema', 400);
             }
         }
 

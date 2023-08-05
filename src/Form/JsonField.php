@@ -32,6 +32,9 @@ abstract class JsonField extends ReactFormField
                 // We've been provided a singleton which means there's not object yet
                 $value = [];
             }
+        } elseif (is_string($value)) {
+            // We've been provided a JSON string
+            $value = $this->parseString($value);
         }
 
         return parent::setValue($value, $data);
