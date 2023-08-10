@@ -2,9 +2,9 @@
 
 This module provides two simple form fields to manage has-one and has-many relations for a parent record.
 
-`AnyField` and `ManyAnyField` are best suited to managing simple DataObjects that are tightly coupled to their owner.
+`AnyField` and `ManyAnyField` are best suited to managing simple DataObjects that are tightly coupled to their owner. This module will not work well for DataObjects with complex relations.
 
-This module will not work well for DataObjects with complex relations.
+[`silverstripe/linkfield`](https://github.com/silverstripe/silverstripe-linkfield) is a great complement to the `AnyField`.
 
 ## Installation
 
@@ -13,6 +13,13 @@ composer require maxime-rainville/anyfield
 ```
 
 This module require Silverstripe CMS 5 or greater.
+
+## Showcase
+[Quick demo](https://github.com/maxime-rainville/silverstripe-anyfield/assets/1168676/659933d6-15cd-45df-a454-b08c4d957e9f)
+
+- Manage `has_one` or `has_many` relations with ease
+- Manage multiple Dataobject classes from a single field
+- Allow your content authors to edit your child DataObjects from a modal within their parent page
 
 ## Sample usage
 
