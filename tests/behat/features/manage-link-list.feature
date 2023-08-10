@@ -5,7 +5,7 @@ Feature: Manage a list of items
 
   Background:
     Given a "page" "About Us" has the "Content" "<p>My content</p>"
-    Given a "page" "Contact us" has the "Content" "<p>Contact details</p>"
+    Given a "page" "Contact us" has the "Content" "<p>Contact details</p><a name='test-anchor'></a>"
     And a "image" "assets/file2.jpg"
 		And the "group" "EDITOR" has permissions "Access to 'Pages' section" and "SITETREE_GRANT_ACCESS" and "SITETREE_REORGANISE"
     And I am logged in as a member of "EDITOR" group
@@ -15,22 +15,24 @@ Feature: Manage a list of items
     And I should see an edit page form
     And I click the "Link test" CMS tab
 
-  Scenario: I can fill an empty AnyField with a link
-    And I should see an empty "My test link" AnyField
-    Then I edit the "My test link" AnyField
-    And I should see an option to add a "Site Tree Link" item to the "My test link" AnyField
-    And I should see an option to add a "External Link" item to the "My test link" AnyField
-    And I should see an option to add a "File Link" item to the "My test link" AnyField
-    And I should see an option to add a "Email Link" item to the "My test link" AnyField
-    And I should see an option to add a "Phone Link" item to the "My test link" AnyField
-    Then I add a "Site Tree Link" item to the "My test link" AnyField
-    And I should see a "Site Tree Link" AnyField modal
+  @onlyme
+  Scenario: I can add items to an empty ManyAnyField
+    And I should see an empty "My test links" ManyAnyField
+    Then I edit the "My test links" ManyAnyField
+    And I should see an option to add a "Site Tree Link" item to the "My test links" ManyAnyField
+    And I should see an option to add a "External Link" item to the "My test links" ManyAnyField
+    And I should see an option to add a "File Link" item to the "My test links" ManyAnyField
+    And I should see an option to add a "Email Link" item to the "My test links" ManyAnyField
+    And I should see an option to add a "Phone Link" item to the "My test links" ManyAnyField
+    Then I add a "Site Tree Link" item to the "My test links" ManyAnyField
+    And I should see a "Site Tree Link" ManyAnyField modal
     Then I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
     And I fill in "Title" with "Test link site tree link"
+    And I select "test-anchor" in the "#Form_ModalsAnyFieldForm_Anchor_Holder" anchor dropdown
     And I press the "Insert link" button
-    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    And I should see a "My test links" ManyAnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us" on position 1
     Then I press the "Save" button
-    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    And I should see a "My test links" ManyAnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us" on position 1
 
   Scenario: I can clear a AnyField
     Then I edit the "My test link" AnyField

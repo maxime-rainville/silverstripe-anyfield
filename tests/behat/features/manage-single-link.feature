@@ -15,6 +15,7 @@ Feature: Manage Single item
     And I should see an edit page form
     And I click the "Link test" CMS tab
 
+
   Scenario: I can fill an empty AnyField with a link
     And I should see an empty "My test link" AnyField
     Then I edit the "My test link" AnyField
