@@ -7,7 +7,10 @@ import AnyFieldBox from '../AnyFieldBox/AnyFieldBox';
 import AllowedDataObjectClass from '../../types/AllowedDataObjectClass';
 
 const AnyPicker = ({ id, allowedDataObjectClasses, onSelect, title, description, dataObjectClass, onEdit, onClear, baseDataObjectName, baseDataObjectIcon }) => (
-  <AnyFieldBox className={classnames('any-picker', { 'any-picker--selected': dataObjectClass })} id={id} >
+  <AnyFieldBox
+    className={classnames('any-picker', { 'any-picker--selected': dataObjectClass })}
+    data-anyfield-id={id}
+  >
     { dataObjectClass ?
       <AnyPickerTitle
         description={description}
