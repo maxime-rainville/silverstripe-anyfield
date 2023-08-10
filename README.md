@@ -20,6 +20,7 @@ This module require Silverstripe CMS 5 or greater.
 - Manage `has_one` or `has_many` relations with ease
 - Manage multiple Dataobject classes from a single field
 - Allow your content authors to edit your child DataObjects from a modal within their parent page
+- Works in regular Entwine forms and Elemental blocks.
 
 ## Sample usage
 
