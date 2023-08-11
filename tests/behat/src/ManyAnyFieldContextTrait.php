@@ -22,16 +22,14 @@ trait ManyAnyFieldContextTrait
 
     /**
      *
-     * @Then /^I should see an empty "(.+?)" ManyAnyField/
-     * @param string $not
-     * @param string $tabLabel
+     * @Then /^I should see (\d+) items? in "(.+?)" ManyAnyField/
      */
-    public function ManyAnyFieldShouldBeEmpty(string $label)
+    public function ManyAnyFieldShouldBeEmpty(int $count, string $label)
     {
         $field = $this->iShouldSeeManyAnyField($label);
         $items = $this->getManyAnyChildItems($field);
 
-        Assert::assertEmpty($items, "ManyAnyField field $label is not empty");
+        Assert::assertCount($count, $items, "ManyAnyField field $label should count $count items");
     }
 
     /**
@@ -93,21 +91,23 @@ trait ManyAnyFieldContextTrait
     }
 
     /**
-     * @Then /^I should see a clear button in the "(.+?)" ManyAnyField/
+     * @Then /^I clear item (\d+) from the "(.+?)" ManyAnyField/
      * @param string $title
      */
-    public function iShouldSeeClearButtonInManyAnyField(string $title): void
+    public function iClearManyAnyField(int $pos, string $title): void
     {
-        $this->getClearButton($title);
+        $this->getManyAnyFieldClearButton($title, $pos)->click();
     }
 
     /**
-     * @Then /^I clear the "(.+?)" ManyAnyField/
-     * @param string $title
+     * @Then /^I edit item (\d+) from the "(.+?)" ManyAnyField/
      */
-    public function iClearManyAnyField(string $title): void
+    public function iEditManyAnyFieldItem(int $pos, string $title): void
     {
-        $this->getManyAnyFieldClearButton($title)->click();
+        $field = $this->iShouldSeeManyAnyField($title);
+        $items = $this->getManyAnyChildItems($field);
+        $item = $items[$pos - 1];
+        $item->click();
     }
 
     /**
@@ -166,12 +166,13 @@ trait ManyAnyFieldContextTrait
         return null;
     }
 
-    protected function getManyAnyClearButton(string $locator): NodeElement
+    protected function getManyAnyFieldClearButton(string $locator, int $pos): NodeElement
     {
-        $field = $this->getAnyField($locator);
-        Assert::assertNotNull($field, "AnyField $$locator does not exist");
+        $field = $this->iShouldSeeManyAnyField($locator);
+        $items = $this->getManyAnyChildItems($field);
+        $item = $items[$pos - 1];
 
-        $button = $field->find('css', '.any-picker-title__clear');
+        $button = $item->find('css', '.any-picker-title__clear');
         Assert::assertNotNull($button, "Could not find clear button in $locator AnyField");
 
         return $button;

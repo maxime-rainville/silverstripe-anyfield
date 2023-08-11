@@ -15,9 +15,8 @@ Feature: Manage a list of items
     And I should see an edit page form
     And I click the "Link test" CMS tab
 
-  @onlyme
   Scenario: I can add items to an empty ManyAnyField
-    And I should see an empty "My test links" ManyAnyField
+    And I should see 0 item in "My test links" ManyAnyField
     Then I edit the "My test links" ManyAnyField
     And I should see an option to add a "Site Tree Link" item to the "My test links" ManyAnyField
     And I should see an option to add a "External Link" item to the "My test links" ManyAnyField
@@ -34,51 +33,70 @@ Feature: Manage a list of items
     Then I press the "Save" button
     And I should see a "My test links" ManyAnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us" on position 1
 
-  Scenario: I can clear a AnyField
-    Then I edit the "My test link" AnyField
-    And I add a "Site Tree Link" item to the "My test link" AnyField
-    And I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
-    And I fill in "Title" with "Test link site tree link"
-    And I press the "Insert link" button
-    And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
-    And I should see a clear button in the "My test link" AnyField
-    Then I clear the "My test link" AnyField
-    And I should see an empty "My test link" AnyField
-    Then I press the "Save" button
-    And I should see an empty "My test link" AnyField
-
-  Scenario: I can fill a AnyField with an external item
-    Then I edit the "My test link" AnyField
-    And I add a "External Link" item to the "My test link" AnyField
-    Then I fill in "Title" with "Silverstripe"
-    And I fill in "External url" with "https://www.silverstripe.org"
-    Then I press the "Insert link" button
-    And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "Silverstripe" and a description of "External Link: https://www.silverstripe.org"
-
-  Scenario: I can fill a AnyField with an email link
-    Then I edit the "My test link" AnyField
-    And I add a "Email Link" item to the "My test link" AnyField
+  Scenario: I can clear a ManyAnyField
+    Then I edit the "My test links" ManyAnyField
+    And I add a "Email Link" item to the "My test links" ManyAnyField
     Then I fill in "Email" with "hello@example.com"
     Then I press the "Insert link" button
-    And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "hello@example.com" and a description of "Email Link: hello@example.com"
 
-  Scenario: I can fill a AnyField with a file link
-    Then I edit the "My test link" AnyField
-    And I add a "File Link" item to the "My test link" AnyField
+    Then I edit the "My test links" ManyAnyField
+    And I add a "File Link" item to the "My test links" ManyAnyField
     And I click on the ".gallery__files .gallery-item__thumbnail" element
     Then I fill in "Link description" with "A file link"
     Then I press the "Link to file" button
-    And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "A file link" and a description of "File Link: file2.jpg"
 
-  Scenario: I can fill a AnyField with a file link
-    Then I edit the "My test link" AnyField
-    And I add a "Phone Link" item to the "My test link" AnyField
-    Then I fill in "Phone" with "111"
-    And I fill in "Title" with "NZ Emergency services"
+    Then I should see 2 items in "My test links" ManyAnyField
+    And I should see a "My test links" ManyAnyField filled with "hello@example.com" and a description of "Email Link: hello@example.com" on position 1
+    And I should see a "My test links" ManyAnyField filled with "A file link" and a description of "File Link: file2.jpg" on position 2
+
+    Then I clear item 1 from the "My test links" ManyAnyField
+    And I should see 1 item in "My test links" ManyAnyField
+    And I should see a "My test links" ManyAnyField filled with "A file link" and a description of "File Link: file2.jpg" on position 1
+
+    Then I press the "Save" button
+    Then I clear item 1 from the "My test links" ManyAnyField
+    And I should see 0 item in "My test links" ManyAnyField
+
+    Then I press the "Save" button
+    And I should see 0 item in "My test links" ManyAnyField
+
+  Scenario: I can update an existing item in a ManyAnyField
+    Then I edit the "My test links" ManyAnyField
+    And I add a "External Link" item to the "My test links" ManyAnyField
+    Then I fill in "Title" with "Silverstripe CMS"
+    And I fill in "External url" with "https://www.silverstripe.org"
     Then I press the "Insert link" button
-    And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "NZ Emergency services" and a description of "Phone Link: 111"
+
+    Then I edit the "My test links" ManyAnyField
+    And I add a "Phone Link" item to the "My test links" ManyAnyField
+    And I fill in "Title" with "NZ Emergency services"
+    Then I fill in "Phone" with "111"
+    Then I press the "Insert link" button
+
+    Then I should see 2 items in "My test links" ManyAnyField
+    And I should see a "My test links" ManyAnyField filled with "Silverstripe CMS" and a description of "External Link: https://www.silverstripe.org" on position 1
+    And I should see a "My test links" ManyAnyField filled with "NZ Emergency services" and a description of "Phone Link: 111" on position 2
+
+    Then I edit item 1 from the "My test links" ManyAnyField
+    And I should see a "External Link" ManyAnyField modal
+    And the "Form_ModalsAnyFieldForm_Title" field should contain "Silverstripe CMS"
+    And the "External url" field should contain "https://www.silverstripe.org"
+    Then I fill in "Title" with "Silverstripe"
+    And I fill in "External url" with "https://www.silverstripe.com"
+    Then I press the "Insert link" button
+
+    Then I should see 2 items in "My test links" ManyAnyField
+    And I should see a "My test links" ManyAnyField filled with "Silverstripe" and a description of "External Link: https://www.silverstripe.com" on position 1
+
+    Then I press the "Save" button
+
+    Then I edit item 2 from the "My test links" ManyAnyField
+    And I should see a "Phone Link" ManyAnyField modal
+    And the "Form_ModalsAnyFieldForm_Title" field should contain "NZ Emergency services"
+    And the "Phone" field should contain "111"
+    And I fill in "Title" with "Canada Emergency services"
+    Then I fill in "Phone" with "911"
+
+    Then I click on the "button.close" element
+    And I should see 2 items in "My test links" ManyAnyField
+    And I should see a "My test links" ManyAnyField filled with "NZ Emergency services" and a description of "Phone Link: 111" on position 2

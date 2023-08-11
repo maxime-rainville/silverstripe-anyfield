@@ -47,7 +47,7 @@ Feature: Manage Single item
     Then I press the "Save" button
     And I should see an empty "My test link" AnyField
 
-  Scenario: I can update an existing link
+  Scenario: I can update an existing item
     Then I edit the "My test link" AnyField
     And I add a "Site Tree Link" item to the "My test link" AnyField
     And I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
@@ -88,7 +88,7 @@ Feature: Manage Single item
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "A file link" and a description of "File Link: file2.jpg"
 
-  Scenario: I can fill a AnyField with a file link
+  Scenario: I can fill a AnyField with a phone link
     Then I edit the "My test link" AnyField
     And I add a "Phone Link" item to the "My test link" AnyField
     Then I fill in "Phone" with "111"
