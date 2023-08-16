@@ -1,9 +1,10 @@
 @javascript @retry
-Feature: Manage a list of items
+Feature: Manage a list of items in Elemental block
   As a cms author
   I want to manage list of items using the ManyAnyField
 
   Background:
+    Given I add an extension "DNADesign\Elemental\Extensions\ElementalPageExtension" to the "Page" class
     Given a "page" "About Us" has the "Content" "<p>My content</p>"
     Given a "page" "Contact me" has the "Content" "<p>Contact details</p><a name='test-anchor'></a>"
     And a "image" "assets/file2.jpg"
@@ -13,7 +14,9 @@ Feature: Manage a list of items
     Then I should see "About Us" in the tree
     And I click on "About Us" in the tree
     And I should see an edit page form
-    And I click the "Link test" CMS tab
+    And I press the "Add block" button
+    And I press the "Link" button
+    And I click on the ".element-editor__element" element
 
   Scenario: I can add items to an empty ManyAnyField
     And I should see 0 item in "My test links" ManyAnyField
@@ -26,11 +29,12 @@ Feature: Manage a list of items
     Then I add a "Site Tree Link" item to the "My test links" ManyAnyField
     And I should see a "Site Tree Link" ManyAnyField modal
     Then I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
-    And I fill in "Title" with "Test link site tree link"
+    And I fill in "Form_ModalsAnyFieldForm_Title" with "Test link site tree link"
     And I select "test-anchor" in the "#Form_ModalsAnyFieldForm_Anchor_Holder" anchor dropdown
     And I press the "Insert link" button
     And I should see a "My test links" ManyAnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me" on position 1
     Then I press the "Save" button
+    And I click on the ".element-editor__element" element
     And I should see a "My test links" ManyAnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me" on position 1
 
   Scenario: I can clear a ManyAnyField
@@ -53,23 +57,25 @@ Feature: Manage a list of items
     And I should see 1 item in "My test links" ManyAnyField
     And I should see a "My test links" ManyAnyField filled with "A file link" and a description of "File Link: file2.jpg" on position 1
 
-    Then I press the "Save" button
+    And I press the "View actions" button
+    And I click on the ".element-editor__actions-save" element
     Then I clear item 1 from the "My test links" ManyAnyField
     And I should see 0 item in "My test links" ManyAnyField
 
     Then I press the "Save" button
+    And I click on the ".element-editor__element" element
     And I should see 0 item in "My test links" ManyAnyField
 
   Scenario: I can update an existing item in a ManyAnyField
     Then I edit the "My test links" ManyAnyField
     And I add a "External Link" item to the "My test links" ManyAnyField
-    Then I fill in "Title" with "Silverstripe CMS"
+    Then I fill in "Form_ModalsAnyFieldForm_Title" with "Silverstripe CMS"
     And I fill in "External url" with "https://www.silverstripe.org"
     Then I press the "Insert link" button
 
     Then I edit the "My test links" ManyAnyField
     And I add a "Phone Link" item to the "My test links" ManyAnyField
-    And I fill in "Title" with "NZ Emergency services"
+    And I fill in "Form_ModalsAnyFieldForm_Title" with "NZ Emergency services"
     Then I fill in "Phone" with "111"
     Then I press the "Insert link" button
 
@@ -81,22 +87,25 @@ Feature: Manage a list of items
     And I should see a "External Link" ManyAnyField modal
     And the "Form_ModalsAnyFieldForm_Title" field should contain "Silverstripe CMS"
     And the "External url" field should contain "https://www.silverstripe.org"
-    Then I fill in "Title" with "Silverstripe"
+    Then I fill in "Form_ModalsAnyFieldForm_Title" with "Silverstripe"
     And I fill in "External url" with "https://www.silverstripe.com"
     Then I press the "Insert link" button
 
     Then I should see 2 items in "My test links" ManyAnyField
     And I should see a "My test links" ManyAnyField filled with "Silverstripe" and a description of "External Link: https://www.silverstripe.com" on position 1
 
-    Then I press the "Save" button
+    And I press the "View actions" button
+    And I click on the ".element-editor__actions-save" element
 
     Then I edit item 2 from the "My test links" ManyAnyField
     And I should see a "Phone Link" ManyAnyField modal
     And the "Form_ModalsAnyFieldForm_Title" field should contain "NZ Emergency services"
     And the "Phone" field should contain "111"
-    And I fill in "Title" with "Canada Emergency services"
+    And I fill in "Form_ModalsAnyFieldForm_Title" with "Canada Emergency services"
     Then I fill in "Phone" with "911"
 
     Then I click on the "button.close" element
     And I should see 2 items in "My test links" ManyAnyField
     And I should see a "My test links" ManyAnyField filled with "NZ Emergency services" and a description of "Phone Link: 111" on position 2
+
+    Then I press the "Save" button
