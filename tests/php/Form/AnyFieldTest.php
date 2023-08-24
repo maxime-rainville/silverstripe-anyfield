@@ -83,7 +83,7 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
         $form->loadDataFrom($parentRecord);
 
         $field->setValue([
-            'ClassName' => ExternalLink::class,
+            'dataObjectClassKey' => ExternalLink::class,
             'Title' => 'Silverstripe CMS',
             'URL' => 'https://silverstripe.org',
         ]);
