@@ -5,7 +5,7 @@ Feature: Manage Single item
 
   Background:
     Given a "page" "About Us" has the "Content" "<p>My content</p>"
-    Given a "page" "Contact us" has the "Content" "<p>Contact details</p>"
+    Given a "page" "Contact me" has the "Content" "<p>Contact details</p>"
     And a "image" "assets/file2.jpg"
 		And the "group" "EDITOR" has permissions "Access to 'Pages' section" and "SITETREE_GRANT_ACCESS" and "SITETREE_REORGANISE"
     And I am logged in as a member of "EDITOR" group
@@ -14,6 +14,7 @@ Feature: Manage Single item
     And I click on "About Us" in the tree
     And I should see an edit page form
     And I click the "Link test" CMS tab
+
 
   Scenario: I can fill an empty AnyField with a link
     And I should see an empty "My test link" AnyField
@@ -25,41 +26,41 @@ Feature: Manage Single item
     And I should see an option to add a "Phone Link" item to the "My test link" AnyField
     Then I add a "Site Tree Link" item to the "My test link" AnyField
     And I should see a "Site Tree Link" AnyField modal
-    Then I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
+    Then I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
     And I fill in "Title" with "Test link site tree link"
     And I press the "Insert link" button
-    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     Then I press the "Save" button
-    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
 
   Scenario: I can clear a AnyField
     Then I edit the "My test link" AnyField
     And I add a "Site Tree Link" item to the "My test link" AnyField
-    And I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
+    And I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
     And I fill in "Title" with "Test link site tree link"
     And I press the "Insert link" button
     And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     And I should see a clear button in the "My test link" AnyField
     Then I clear the "My test link" AnyField
     And I should see an empty "My test link" AnyField
     Then I press the "Save" button
     And I should see an empty "My test link" AnyField
 
-  Scenario: I can update an existing link
+  Scenario: I can update an existing item
     Then I edit the "My test link" AnyField
     And I add a "Site Tree Link" item to the "My test link" AnyField
-    And I select "Contact us" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
+    And I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
     And I fill in "Title" with "Test link site tree link"
     And I press the "Insert link" button
     And I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-us"
+    Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     Then I edit the "My test link" AnyField
     And I fill in "Title" with "My udated test link"
     And I press the "Insert link" button
-    Then I should see a "My test link" AnyField filled with "My udated test link" and a description of "Site Tree Link: contact-us"
+    Then I should see a "My test link" AnyField filled with "My udated test link" and a description of "Site Tree Link: contact-me"
     Then I press the "Save" button
-    Then I should see a "My test link" AnyField filled with "My udated test link" and a description of "Site Tree Link: contact-us"
+    Then I should see a "My test link" AnyField filled with "My udated test link" and a description of "Site Tree Link: contact-me"
 
   Scenario: I can fill a AnyField with an external item
     Then I edit the "My test link" AnyField
@@ -87,7 +88,7 @@ Feature: Manage Single item
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "A file link" and a description of "File Link: file2.jpg"
 
-  Scenario: I can fill a AnyField with a file link
+  Scenario: I can fill a AnyField with a phone link
     Then I edit the "My test link" AnyField
     And I add a "Phone Link" item to the "My test link" AnyField
     Then I fill in "Phone" with "111"

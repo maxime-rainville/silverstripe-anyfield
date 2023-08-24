@@ -4,8 +4,11 @@ import AnyPickerMenu from '../AnyPicker/AnyPickerMenu';
 import AnyPickerTitle from '../AnyPicker/AnyPickerTitle';
 import AnyFieldBox from '../AnyFieldBox/AnyFieldBox';
 
-const ManyAnyPicker = ({ onSelect, allowedDataObjectClasses, dataobjects, onEdit, onClear, baseDataObjectName, baseDataObjectIcon }) => (
-  <div className="multi-any-picker">
+const ManyAnyPicker = ({
+  onSelect, allowedDataObjectClasses, dataobjects, onEdit, onClear,
+  baseDataObjectName, baseDataObjectIcon, id
+}) => (
+  <div className="multi-any-picker" data-manyanyfield-id={id}>
     <AnyFieldBox className="multi-any-picker__picker">
       <AnyPickerMenu allowedDataObjectClasses={allowedDataObjectClasses} onSelect={onSelect} baseDataObjectName={baseDataObjectName} baseDataObjectIcon={baseDataObjectIcon} />
     </AnyFieldBox>
@@ -29,6 +32,7 @@ ManyAnyPicker.propTypes = {
   dataobjects: PropTypes.arrayOf(PropTypes.shape(AnyPickerTitle.propTypes)),
   onEdit: PropTypes.func,
   onClear: PropTypes.func,
+  id: PropTypes.string.isRequired,
 };
 
 
