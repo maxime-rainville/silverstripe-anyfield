@@ -140,7 +140,7 @@ abstract class JsonField extends ReactFormField
             $value = json_encode($value);
         }
 
-        return $value;
+        return $value ?: '';
     }
 
     /**

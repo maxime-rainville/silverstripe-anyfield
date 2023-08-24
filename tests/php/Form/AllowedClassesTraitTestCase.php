@@ -97,4 +97,36 @@ abstract class AllowedClassesTraitTestCase extends SapphireTest
             'getAllowedDataObjectClasses() relays the correct parameter to AnyService::getAllowedDataObjectClasses()'
         );
     }
+
+    public function testGetProps()
+    {
+        $field = $this->getAnyField();
+        $field->setBaseClass(EmailLink::class);
+        $props = $field->getProps();
+        $expected = [
+            'allowedDataObjectClasses' => AnyService::singleton()->getAllowedDataObjectClasses(
+                EmailLink::class,
+                true,
+                []
+            ),
+            'baseDataObjectName' => 'Email Link',
+            'baseDataObjectIcon' => 'p-mail',
+            'name' => $field->getName(),
+            'value' => '',
+            'extraClass' => $field->extraClass(),
+            'id' => $field->ID(),
+            'disabled' => false,
+            'readOnly' => false,
+            'autofocus' => false,
+            'title' => $field->Title(),
+        ];
+
+        ksort($expected);
+        ksort($props);
+
+        $this->assertEquals(
+            $expected,
+            $props
+        );
+    }
 }

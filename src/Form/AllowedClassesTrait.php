@@ -5,6 +5,7 @@ namespace SilverStripe\AnyField\Form;
 use BadMethodCallException;
 use Psr\Container\NotFoundExceptionInterface;
 use InvalidArgumentException;
+use ReflectionException;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -108,6 +109,11 @@ trait AllowedClassesTrait
      */
     abstract protected function guessBaseClass(?DataObjectInterface $record = null): ?string;
 
+    /**
+     * Return a list of allowed DataObject classes that this field can create.
+     * @param null|DataObjectInterface $record Explicitly a DatabObject whose relation we'll use to guess the base class
+     * @return array
+     */
     public function getAllowedDataObjectClasses(?DataObjectInterface $record = null): array
     {
         $baseClass = $this->getBaseClass($record);
@@ -141,6 +147,13 @@ trait AllowedClassesTrait
         return $props;
     }
 
+    /**
+     * Validate that the provided class name is allowed by this DataOject
+     * @param string $className
+     * @param null|DataObjectInterface $record Explicitly a DatabObject whose relation we'll use to guess the base class
+     * @return void
+     * @throws InvalidArgumentException
+     */
     protected function validClassName(string $className, ?DataObjectInterface $record = null): void
     {
         $valid = array_keys($this->getAllowedDataObjectClasses($record));

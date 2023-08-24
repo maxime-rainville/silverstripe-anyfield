@@ -15,6 +15,7 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
 
     protected static $extra_dataobjects = [
         AnyFieldTest\SingleLink::class,
+        AnyFieldTest\SingleLinkBlock::class,
     ];
 
     protected static $fixture_file = '../LinkModelTest.yml';
@@ -41,6 +42,29 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
             Link::class,
             $field->getBaseClass(),
             'When the form field is assigned to a Form with a record, the base class can be guessed'
+        );
+
+        $field->setName('PageElements_0_Link');
+        $this->assertEquals(
+            Link::class,
+            $field->getBaseClass(AnyFieldTest\SingleLinkBlock::create()),
+            'Elemental form field name can still guess the correct base class'
+        );
+    }
+
+    public function testAllowedDataObjectClassesWithExplicitRecord()
+    {
+        $field = $this->getAnyField();
+        $field->setName('Link');
+
+        $this->assertEquals(
+            AnyService::singleton()->getAllowedDataObjectClasses(
+                Link::class,
+                true,
+                []
+            ),
+            $field->getAllowedDataObjectClasses(AnyFieldTest\SingleLink::create()),
+            'getAllowedDataObjectClasses() relays the correct parameter to AnyService::getAllowedDataObjectClasses()'
         );
     }
 
@@ -89,6 +113,18 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
         ]);
 
         $field->saveInto($parentRecord);
+    }
+
+    public function testInitialHTML()
+    {
+        $field = $this->getAnyField();
+        $field->setName('Link');
+
+        $this->assertStringContainsString(
+            '<div class="any-field-box form-control any-picker"></div>',
+            $field->InitialHTML()->forTemplate(),
+            'Some HTML is preloaded in the field'
+        );
     }
 
 

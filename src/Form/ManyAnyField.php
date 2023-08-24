@@ -195,6 +195,6 @@ class ManyAnyField extends JsonField
             $value = json_encode($value);
         }
 
-        return $value;
+        return $value ?: '';
     }
 }

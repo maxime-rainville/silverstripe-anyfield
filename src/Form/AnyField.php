@@ -40,6 +40,9 @@ class AnyField extends JsonField
         // This bit figures out what the name is meant to be
         if (empty($class) && $record instanceof BaseElement) {
             $fakeData = ElementalAreaController::removeNamespacesFromFields([$fieldname => 0], $record->ID);
+            if (empty($fakeData)) {
+                return null;
+            }
             $fakeData = array_flip($fakeData);
             $fieldname = $fakeData[0];
             $class = DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname);
