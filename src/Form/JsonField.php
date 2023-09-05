@@ -116,7 +116,7 @@ abstract class JsonField extends ReactFormField
             );
         }
 
-        if (!is_array($data) && empty($data)) {
+        if (!is_array($data) || empty($data)) {
             return null;
         }
 

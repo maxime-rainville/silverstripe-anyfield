@@ -3,12 +3,23 @@ SilverStripe\LinkField\Models\ExternalLink:
     Title: Link1
     ExternalUrl: 'https://silverstripe.org/'
   link-2:
-    Title: Link1
+    Title: Link2
     ExternalUrl: 'https://google.com/'
-    # Owner: =>SilverStripe\Link\Tests\LinkOwner.link-owner-1
+
+SilverStripe\LinkField\Models\EmailLink:
+  link-3:
+    Title: Link3
+    Email: 'hello@silverstripe.org'
+
 
 SilverStripe\AnyField\Tests\LinkOwner:
   link-owner-1:
     Title: A Link owner
     Links:
       - =>SilverStripe\LinkField\Models\ExternalLink.link-2
+      - =>SilverStripe\LinkField\Models\EmailLink.link-3
+
+Page:
+  about-us:
+    Title: About us
+    URLSegment: about-us

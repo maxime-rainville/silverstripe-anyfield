@@ -56,6 +56,10 @@ class ManyAnyField extends JsonField
     {
         if (is_string($value) && !empty($value)) {
             $value = $this->parseString($value);
+        } elseif ($value instanceof SS_List) {
+            // If the value is a list, we convert it to a JSON string with all our link data.
+            // Scenario: We're about to render the data for the front end
+            $value = AnyService::singleton()->mapList($value);
         } elseif (empty($value)) {
             // If the value is empty, we convert our list to a JSON string with all our link data.
             // Scenario: We're about to render the data for the front end
@@ -196,5 +200,13 @@ class ManyAnyField extends JsonField
         }
 
         return $value ?: '';
+    }
+
+    protected function parseString(string $value): ?array
+    {
+        $value = parent::parseString($value);
+
+        // Recast any falsy value to an empty array
+        return $value ?: [];
     }
 }

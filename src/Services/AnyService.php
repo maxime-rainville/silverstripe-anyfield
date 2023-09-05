@@ -2,13 +2,10 @@
 
 namespace SilverStripe\AnyField\Services;
 
-use BadMethodCallException;
-use InvalidArgumentException;
-use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 
@@ -21,10 +18,12 @@ class AnyService
 
     /**
      * Generate the Any Field definition for a given DataObject class.
+     * @throws \InjectorNotFoundException
      */
-    public static function generateFieldDefinition(string $className): array
+    public function generateFieldDefinition(string $className): array
     {
         $singleton = DataObject::singleton($className);
+        $this->instanceOfDataObject($singleton);
         return [
             'key' => $className,
             'title' => $singleton->i18n_singular_name(),
@@ -39,7 +38,7 @@ class AnyService
     public function generateDescription(string $className, array $data): array
     {
         $dummy = Injector::inst()->create($className, $data, DataObject::CREATE_MEMORY_HYDRATED);
-
+        $this->instanceOfDataObject($dummy);
         $summary = $dummy->hasMethod('getSummary') ? (string)$dummy->getSummary() : '';
 
         return [
@@ -55,7 +54,16 @@ class AnyService
     {
         $data = $value->toMap();
         $data['dataObjectClassKey'] = $value->ClassName;
+        unset($data['ClassName']);
         return $data;
+    }
+
+    private function instanceOfDataObject(mixed $d): void
+    {
+        if (!$d instanceof DataObject) {
+            $classname = get_class($d);
+            throw new InjectorNotFoundException("The '{$classname}' is not a valid DataObject");
+        }
     }
 
     /**
@@ -80,29 +88,11 @@ class AnyService
         return json_encode($$this->mapList($list));
     }
 
-    public function setData(DataObject $record, array|string $data): DataObject
+    public function setData(DataObject $record, array $data): DataObject
     {
-        if (is_string($data)) {
-            $data = json_decode($data, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new InvalidArgumentException(sprintf(
-                    '%s: Decoding json string failed with "%s"',
-                    static::class,
-                    json_last_error_msg()
-                ));
-            }
-        }
-
-        if (!is_array($data)) {
-            throw new InvalidArgumentException(sprintf('%s: Could not convert $data to an array.', static::class));
-        }
-
         $dataObjectClassKey = $data['dataObjectClassKey'] ?? null;
 
-        if (!$dataObjectClassKey) {
-            throw new InvalidArgumentException(sprintf('%s: $data does not have a dataObjectClassKey.', static::class));
-        }
+        $this->instanceOfDataObject(DataObject::singleton($dataObjectClassKey));
 
         // Check if we want to change the type of our underlying data object
         if ($record->ClassName !== $dataObjectClassKey) {
@@ -122,13 +112,13 @@ class AnyService
         return $record;
     }
 
-    public function getAllowedDataObjectClasses(string $baseClass, bool $recursivelyAddChildClass, array $excludedClasses): array
-    {
+    public function getAllowedDataObjectClasses(
+        string $baseClass,
+        bool $recursivelyAddChildClass,
+        array $excludedClasses
+    ): array {
         $singleton = DataObject::singleton($baseClass);
-
-        if (!$singleton) {
-            throw new \InvalidArgumentException($baseClass . ' is not a valid DataObject class and cannot be managed by an AnyField');
-        }
+        $this->instanceOfDataObject($singleton);
 
         $allowedDataObjectClasses = [];
 

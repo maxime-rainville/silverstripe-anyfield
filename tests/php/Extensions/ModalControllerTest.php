@@ -47,8 +47,6 @@ class ModalControllerTest extends SapphireTest
         $this->assertField($fields, 'dataObjectClassKey', HiddenField::class, PhoneLink::class);
         $this->assertField($fields, 'Title', TextField::class, 'New Zealand Emergency services');
         $this->assertField($fields, 'Phone', TextField::class, '111');
-
-
     }
 
     private function assertField(FieldList $fields, string $name, string $fieldClass, $value): void

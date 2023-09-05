@@ -5,7 +5,6 @@ namespace SilverStripe\AnyField\Tests\Extensions;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Dev\SapphireTest;
 
-
 class LeftAndMainTest extends SapphireTest
 {
 

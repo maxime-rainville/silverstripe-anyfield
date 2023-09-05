@@ -177,5 +177,4 @@ trait ManyAnyFieldContextTrait
 
         return $button;
     }
-
 }

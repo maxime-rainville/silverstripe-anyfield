@@ -176,5 +176,4 @@ trait AnyFieldContextTrait
         $page = $this->getMainContext()->getSession()->getPage();
         return $page->find('css', '[role=dialog]');
     }
-
 }

@@ -25,7 +25,7 @@ class FixtureContext extends BaseFixtureContext
      * @param string $not
      * @param string $tabLabel
      */
-    public function iShouldSeeModal(string $type, string $many='')
+    public function iShouldSeeModal(string $type, string $many = '')
     {
         $modal = $this->getModal();
         $title = $modal->find('css', '.modal-title');
@@ -70,5 +70,4 @@ class FixtureContext extends BaseFixtureContext
             $element->click();
         });
     }
-
 }
