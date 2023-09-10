@@ -13,7 +13,16 @@ export const stringifyData = (Component) => (({ data, value, ...props }) => {
   if (typeof dataValue === 'string') {
     dataValue = JSON.parse(dataValue);
   }
-  return <Component dataStr={JSON.stringify(dataValue)} {...props} data={dataValue} />;
+
+  // Rebuild the data string and sort the entries to avoid doing a pointless
+  // GraphQL request when the sorting changes. Only the ManyAnyField needs this
+  const dataStr = JSON.stringify(
+    Array.isArray(dataValue) ?
+    [...dataValue].sort() :
+    dataValue
+  );
+
+  return <Component dataStr={dataStr} {...props} data={dataValue} />;
 });
 
 

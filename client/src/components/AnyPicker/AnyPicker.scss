@@ -1,6 +1,13 @@
-.any-picker-menu {
+.dropdown.any-picker-menu {
   width: 100%;
-  height: 100%;
+}
+
+.any-picker-menu {
+
+  &.btn {
+    width: 100%;
+    height: 100%;
+  }
 
   &.font-icon-any::before {
     margin: $spacer-xs;
@@ -23,12 +30,14 @@
 
 .any-picker-title {
 
-  display: flex;
-  align-items: center;
-  width: 100%;
-  text-align: left;
-  border: none;
-  margin-right: 0;
+  &.btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    border: none;
+    margin-right: 0;
+  }
 
   &:hover, &:focus {
     background: $gray-100;
@@ -79,5 +88,22 @@
 
   &__url {
     color: $link-color;
+  }
+
+  &__icon {
+    position: relative;
+    margin-right: 6px;
+    line-height: 0;
+    vertical-align: middle;
+    font-size: 1.231rem;
+  }
+
+  &__handle {
+    position: relative;
+    margin-right: 6px;
+    padding-right: 6px;
+    line-height: 0;
+    vertical-align: middle;
+    font-size: 1.231rem;
   }
 }

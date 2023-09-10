@@ -4,6 +4,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import AllowedDataObjectClass from 'types/AllowedDataObjectClass';
 import { Button } from 'reactstrap';
+import AnyPickerTitleHandle from './AnyPickerTitleHandle';
+import classnames from 'classnames';
 
 const stopPropagation = (fn) => (e) => {
   e.nativeEvent.stopImmediatePropagation();
@@ -15,13 +17,15 @@ const stopPropagation = (fn) => (e) => {
   }
 };
 
-const AnyPickerTitle = ({ title, dataObjectClass, description, onClear, onClick, className, id }) => (
+const AnyPickerTitle = ({ title, dataObjectClass, description, onClear, onClick, className, id, sortable }) => (
   <Button
-    className={classnames('any-picker-title', `font-icon-${dataObjectClass.icon || 'link'}`, className)}
+    className={classnames('any-picker-title', className)}
     color="secondary"
     onClick={stopPropagation(onClick)}
     id={id}
   >
+    {sortable && <AnyPickerTitleHandle />}
+    <span className={`font-icon-${dataObjectClass.icon || 'link'} any-picker-title__icon` } />
     <div className="any-picker-title__detail">
       <div className="any-picker-title__title">{title}</div>
       <small className="any-picker-title__type">
@@ -45,11 +49,13 @@ AnyPickerTitle.propTypes = {
   dataObjectClass: AllowedDataObjectClass.isRequired,
   description: PropTypes.string,
   onClear: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  sortable: PropTypes.bool,
 };
 
 AnyPickerTitle.defaultProps = {
-  dataObjectClass: {}
+  dataObjectClass: {},
+  sortable: false,
 };
 
 export default AnyPickerTitle;

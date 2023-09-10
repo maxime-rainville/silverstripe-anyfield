@@ -3,18 +3,23 @@
     margin-bottom: $spacer-xs;
   }
 
-  &__list {
+  &__list.any-field-box {
     flex-wrap: wrap;
     height: auto;
   }
 
-  &__dataobject {
+  &__dataobject.btn {
     width: 100%;
     border-top: 1px solid #ced5e1;
     border-radius: 0;
-
     &:first-child {
       border-top: none;
     }
   }
+}
+
+.sortableHelper {
+  background-color: white;;
+  border-radius: .23rem !important;
+  border: solid 1px #ced5e1 !important;
 }

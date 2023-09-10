@@ -2,7 +2,6 @@
 
 namespace SilverStripe\AnyField\Extensions;
 
-use InvalidArgumentException;
 use SilverStripe\Admin\ModalController as OwnerController;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Extension;
