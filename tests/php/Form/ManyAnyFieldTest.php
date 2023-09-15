@@ -12,6 +12,8 @@ use SilverStripe\LinkField\Models\ExternalLink;
 use SilverStripe\LinkField\Models\EmailLink;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\AnyField\Extensions\Sortable;
+use LogicException;
 
 class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 {
@@ -24,6 +26,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
     protected static $required_extensions = [
         Link::class => [
             AnyFieldTest\ForcePermissionExtension::class,
+            Sortable::class,
         ],
     ];
 
@@ -199,6 +202,52 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
         );
     }
 
+    public function testSaveIntoWithSort()
+    {
+        $owner = $this->objFromFixture(LinkOwner::class, 'link-owner-1');
+        $externalLinkID = $this->idFromFixture(ExternalLink::class, 'link-2');
+        $emailLinkID = $this->idFromFixture(EmailLink::class, 'link-3');
+
+        $this->assertEquals(
+            [
+                $externalLinkID => 'Link2',
+                $emailLinkID => 'Link3'
+            ],
+            $owner->Links()->map()->toArray(),
+            'Initial link list contains 2 elements'
+        );
+
+        $field = new ManyAnyField('Links', 'Links', $owner->Links());
+        $submittedData = [
+            [
+                'Title' => 'Link3',
+                'Email' => 'hello@silverstripe.org',
+                'ID' => $emailLinkID,
+                'dataObjectClassKey' => EmailLink::class,
+            ],
+            [
+                'ID' => $externalLinkID,
+                'Title' => 'Link2',
+                'ExternalUrl' => 'http://www.google.co.nz',
+                'dataObjectClassKey' => ExternalLink::class,
+            ]
+        ];
+        $field->setBaseClass(Link::class);
+        $field->setSort('Sort');
+        $field->setValue(json_encode($submittedData), $owner);
+        $field->saveInto($owner);
+        $owner->write();
+
+        $this->assertEquals(
+            [
+                $emailLinkID => 1,
+                $externalLinkID => 2,
+            ],
+            $owner->Links()->map('ID', 'Sort')->toArray(),
+            'Order of link has been reversed'
+        );
+    }
+
     public function testCanCreatePermission()
     {
         $this->expectExceptionCode(403, 'ManyAnyField respects can create permission');
@@ -298,5 +347,70 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
             json_decode($field->InputValue(), true),
             'InputValue can convert array to JSON'
         );
+    }
+
+    public function testGetProps()
+    {
+        $field = $this->getAnyField();
+        $field->setBaseClass(EmailLink::class);
+        $props = $field->getProps();
+        $expected = [
+            'allowedDataObjectClasses' => AnyService::singleton()->getAllowedDataObjectClasses(
+                EmailLink::class,
+                true,
+                []
+            ),
+            'baseDataObjectName' => 'Email Link',
+            'baseDataObjectIcon' => 'p-mail',
+            'name' => $field->getName(),
+            'value' => '',
+            'extraClass' => $field->extraClass(),
+            'id' => $field->ID(),
+            'disabled' => false,
+            'readOnly' => false,
+            'autofocus' => false,
+            'sortable' => false,
+            'title' => $field->Title(),
+        ];
+
+        ksort($expected);
+        ksort($props);
+
+        $this->assertEquals(
+            $expected,
+            $props
+        );
+    }
+
+    public function testSort()
+    {
+        $field = $this->getAnyField();
+        $field->setBaseClass(Link::class);
+        $this->assertNull($field->getSort(), 'Sort is null by default');
+        $props = $field->getProps();
+        $this->assertFalse($props['sortable'], 'ManyAnyField is not sortable by default');
+
+
+        $field->setSort('Sort');
+        $this->assertEquals('Sort', $field->getSort(), 'Sort value can be set');
+        $props = $field->getProps();
+        $this->assertTrue($props['sortable'], 'Setting sort enables sorting');
+
+
+        $field->setSort(null);
+        $this->assertNull($field->getSort(), 'Can unset sort value');
+        $props = $field->getProps();
+        $this->assertFalse($props['sortable'], 'Unsetting sort disable sorting');
+    }
+
+    public function testInvalidSort()
+    {
+        $this->expectException(LogicException::class, 'ManyAnyField throws an exception when the sort column is invalid');
+
+        $field = $this->getAnyField();
+        $field->setBaseClass(Link::class);
+
+        $field->setSort('NonExistingColumn');
+        $props = $field->getProps();
     }
 }

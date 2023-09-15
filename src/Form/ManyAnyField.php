@@ -194,10 +194,14 @@ class ManyAnyField extends JsonField
      */
     private function buildSortOrder(array $value)
     {
-        // Build the list of IDs ond the sorted order
+        // Build the list of IDs and the sorted order
         $map = array_map(function ($item) {
             return $item['ID'];
         }, $value);
+
+        // We want our first key to be 1, so we don't have a sort value of 0
+        array_unshift($map, "phoney");
+        unset($map[0]);
 
         // Flip it so the ID returns its order
         return array_flip($map);
