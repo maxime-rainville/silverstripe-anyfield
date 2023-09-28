@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import AnyFieldData from '../../types/AnyFieldData';
 import AbstractAnyField, { anyFieldPropTypes } from '../AbstractAnyField/AbstractAnyField';
 import anyFieldHOC from '../AbstractAnyField/anyFieldHOC';
+import { arrayMoveImmutable as arrayMove } from 'array-move';
 
 /**
  * Helper that matches dataobjects to their descriptions
@@ -24,10 +25,14 @@ function mergeAnyFieldDataWithDescription(datalist, descriptions, allowedDataObj
 /**
  * Renders a AnyField allowing the selection of multiple links.
  */
-const ManyAnyField = (props) => {
+const ManyAnyField = ({ sortable, ...props }) => {
   const staticProps = {
     buildProps: () => ({
       dataobjects: mergeAnyFieldDataWithDescription(props.data, props.anyFieldDescriptions, props.allowedDataObjectClasses),
+      onSort: ({ oldIndex, newIndex }, event) => {
+        props.onChange(event, { id: props.id, value: JSON.stringify(arrayMove(props.data, oldIndex, newIndex)) });
+      },
+      sortable
     }),
     clearData: linkId => (
       props.data.filter(({ ID }) => ID !== linkId)
@@ -52,6 +57,7 @@ const ManyAnyField = (props) => {
 ManyAnyField.propTypes = {
   ...anyFieldPropTypes,
   data: PropTypes.arrayOf(AnyFieldData),
+  sortable: PropTypes.bool,
 };
 
 export { ManyAnyField as Component };

@@ -125,6 +125,14 @@ trait AllowedClassesTrait
     public function getProps(): array
     {
         $props = parent::getProps();
+        $allowedClassProps = $this->getAllowedClassProps();
+
+        return array_merge($props, $allowedClassProps);
+    }
+
+    public function getAllowedClassProps(): array
+    {
+        $props = parent::getProps();
 
         $baseClass = $this->getBaseClass();
 

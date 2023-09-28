@@ -2,8 +2,14 @@
 
 namespace SilverStripe\AnyField\Form;
 
+use BadMethodCallException;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Models\BaseElement;
+use InvalidArgumentException;
+use Exception;
+use LogicException;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\Control\Controller;
@@ -16,11 +22,13 @@ use SilverStripe\ORM\SS_List;
  */
 class ManyAnyField extends JsonField
 {
+    use AllowedClassesTrait;
+
     protected $schemaComponent = 'ManyAnyField';
 
     private ?SS_List $dataList;
 
-    use AllowedClassesTrait;
+    private ?string $sortColumn = null;
 
     private array $allowedDataObjectClasses = [];
 
@@ -42,6 +50,23 @@ class ManyAnyField extends JsonField
     {
         $this->dataList = $list;
         return $this;
+    }
+
+    /**
+     * Define what column the list should be sorted by. Set to a falsy value to disable sorting.
+     */
+    public function setSort(?string $sortColumn): self
+    {
+        $this->sortColumn = $sortColumn;
+        return $this;
+    }
+
+    /**
+     * Retrieve the name of the column use for sorting or null if sorting is disabled.
+     */
+    public function getSort(): ?string
+    {
+        return $this->sortColumn;
     }
 
     /**
@@ -98,13 +123,20 @@ class ManyAnyField extends JsonField
 
         $value = is_string($dataValue) ? $this->parseString($dataValue) : $dataValue;
 
+        if ($this->isSortable($record)) {
+            $sortOrder = $this->buildSortOrder($value);
+            $sortColumn = $this->getSort();
+            foreach ($value as &$item) {
+                $item[$sortColumn] = $sortOrder[$item['ID']];
+            }
+        }
+
         /** @var HasMany|DataObject[] $links */
         if ($datalist = $record->$fieldname()) {
             // Loop through all the existing data objects and update/delete them as needed.
             foreach ($datalist as $do) {
                 // As we process a dataobject we remove it from the value array
                 $data = $this->shiftRecordByID($value, $do->ID);
-
 
                 if ($data) {
                     // Update an existing record
@@ -158,6 +190,24 @@ class ManyAnyField extends JsonField
     }
 
     /**
+     * Build the sort order for the list of data objects. Returns a list of IDs with their matching sort order.
+     */
+    private function buildSortOrder(array $value)
+    {
+        // Build the list of IDs and the sorted order
+        $map = array_map(function ($item) {
+            return $item['ID'];
+        }, $value);
+
+        // We want our first key to be 1, so we don't have a sort value of 0
+        array_unshift($map, "phoney");
+        unset($map[0]);
+
+        // Flip it so the ID returns its order
+        return array_flip($map);
+    }
+
+    /**
      * Try to guess what class we are editing
      */
     private function guessBaseClass(?DataObjectInterface $record = null): ?string
@@ -208,5 +258,35 @@ class ManyAnyField extends JsonField
 
         // Recast any falsy value to an empty array
         return $value ?: [];
+    }
+
+    /**
+     * Check if the Field can be sorted.
+     * @throws LogicException If the sorting column is invalid
+     */
+    private function isSortable(?DataObject $record = null): bool
+    {
+        $sort = $this->getSort();
+        if ($sort) {
+            $baseClass = $this->getBaseClass($record);
+            $list = DataObject::get($baseClass);
+            if (!$list->canSortBy($sort)) {
+                throw new LogicException("ManyAnyField: Cannot sort by {$sort} on {$baseClass}");
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getProps(): array
+    {
+        $props = parent::getProps();
+        $allowedClassProps = $this->getAllowedClassProps();
+
+        $props['sortable'] = $this->isSortable();
+
+        return array_merge($props, $allowedClassProps);
     }
 }
