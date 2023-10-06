@@ -82,6 +82,22 @@ App\Models\Book:
   icon: book
 ```
 
+## Sorting the ManyManyField
+
+`ManyManyField` can be configured to sort its results. Called `setSort` to define what field should be used to sort the results
+
+```php
+ManyAnyField::create('Pets')->setSort('Sort')
+```
+
+A convenience extension can be applied to your DataObject classes to add the required field to make them sortable. The extension will automatically add a `Sort` integer field, define the default sort order and hide the `Sort` field from the CMS form.
+```yml
+App\Models\FooBar:
+  extension:
+  - SilverStripe\AnyField\Extensions\Sortable
+```
+
+
 ## Advanced use case
 
 ### Auto-publishing and cascade deleting
