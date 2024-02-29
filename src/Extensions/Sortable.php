@@ -3,6 +3,7 @@
 namespace SilverStripe\AnyField\Extensions;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataExtension;
 
 /**
@@ -22,6 +23,6 @@ class Sortable extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $fields->removeByName('Sort');
+        $fields->add(HiddenField::create('Sort'));
     }
 }

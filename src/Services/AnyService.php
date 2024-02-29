@@ -6,6 +6,9 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorNotFoundException;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 
@@ -41,6 +44,10 @@ class AnyService
         $this->instanceOfDataObject($dummy);
         $summary = $dummy->hasMethod('getSummary') ? (string)$dummy->getSummary() : '';
 
+        if (empty($summary) && $dummy->hasMethod('getDescription')) {
+            $summary = (string)$dummy->getDescription();
+        }
+
         return [
             'title' => $dummy->getTitle(),
             'description' => $summary,
@@ -50,11 +57,14 @@ class AnyService
     /**
      * Given a DataObject, return a map of its fields so it can be edited in a AnyField
      */
-    public function map(DataObject $value): array
+    public function map(DataObject $record): array
     {
-        $data = $value->toMap();
-        $data['dataObjectClassKey'] = $value->ClassName;
-        unset($data['ClassName']);
+        $fieldlist = $record->getCMSFields();
+        $fieldlist->add(HiddenField::create('ID'));
+        $form = Form::create(null, null, $fieldlist, FieldList::create());
+        $form->loadDataFrom($record);
+        $data = $form->getData();
+        $data['dataObjectClassKey'] = $record->ClassName;
         return $data;
     }
 
@@ -103,11 +113,16 @@ class AnyService
             }
         }
 
-        foreach ($data as $key => $value) {
-            if ($key !== 'ID' && $record->hasField($key)) {
-                $record->setField($key, $value);
-            }
-        }
+        $fieldlist = $record->getCMSFields();
+        $form = Form::create(null, null, $fieldlist, FieldList::create());
+        $form->loadDataFrom($data);
+        $form->saveInto($record);
+
+        // foreach ($data as $key => $value) {
+        //     if ($key !== 'ID' && $record->hasField($key)) {
+        //         $record->setField($key, $value);
+        //     }
+        // }
 
         return $record;
     }
