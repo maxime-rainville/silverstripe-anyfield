@@ -14,7 +14,7 @@
         "silverstripe/recipe-testing": "^3",
         "squizlabs/php_codesniffer": "^3",
         "maxime-rainville/silverstripe-linkfield-tester": "dev-master",
-        "silverstripe/linkfield": "dev-pulls/3/anyfield-compat"
+        "silverstripe/anyfield": "dev-master"
     },
     "license": "BSD-3-Clause",
     "authors": [
