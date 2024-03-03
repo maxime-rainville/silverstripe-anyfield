@@ -18,7 +18,7 @@ const AnyPickerMenu = ({ allowedDataObjectClasses, onSelect, baseDataObjectName,
       toggle={toggle}
       className="any-picker-menu"
     >
-      <DropdownToggle className={`any-picker-menu__toggle font-icon-${baseDataObjectIcon || 'plus-1'}`} caret>
+      <DropdownToggle className={`any-picker-menu__toggle ${baseDataObjectIcon || 'plus-1'}`} caret>
         {
           i18n.sprintf(
             i18n._t('AnyField.ADD_DATAOBJECT', 'Add %s'),
@@ -28,7 +28,7 @@ const AnyPickerMenu = ({ allowedDataObjectClasses, onSelect, baseDataObjectName,
         </DropdownToggle>
       <DropdownMenu>
         {allowedDataObjectClasses.map(({ key, title, icon }) =>
-          <DropdownItem className={`font-icon-${icon || 'link'}`} key={key} onClick={() => onSelect(key)}>{title}</DropdownItem>
+          <DropdownItem className={`${icon || 'link'}`} key={key} onClick={() => onSelect(key)}>{title}</DropdownItem>
         )}
       </DropdownMenu>
     </Dropdown>

@@ -25,7 +25,7 @@ const AnyPickerTitle = ({ title, dataObjectClass, description, onClear, onClick,
     id={id}
   >
     {sortable && <AnyPickerTitleHandle />}
-    <span className={`font-icon-${dataObjectClass.icon || 'link'} any-picker-title__icon` } />
+    <span className={`${dataObjectClass.icon || 'link'} any-picker-title__icon` } />
     <div className="any-picker-title__detail">
       <div className="any-picker-title__title">{title}</div>
       <small className="any-picker-title__type">
