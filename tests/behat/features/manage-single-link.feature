@@ -15,7 +15,6 @@ Feature: Manage Single item
     And I should see an edit page form
     And I click the "Link test" CMS tab
 
-
   Scenario: I can fill an empty AnyField with a link
     And I should see an empty "My test link" AnyField
     Then I edit the "My test link" AnyField
@@ -27,7 +26,7 @@ Feature: Manage Single item
     Then I add a "Site Tree Link" item to the "My test link" AnyField
     And I should see a "Site Tree Link" AnyField modal
     Then I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
-    And I fill in "Title" with "Test link site tree link"
+    And I fill in "Link text" with "Test link site tree link"
     And I press the "Insert link" button
     And I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     Then I press the "Save" button
@@ -37,12 +36,13 @@ Feature: Manage Single item
     Then I edit the "My test link" AnyField
     And I add a "Site Tree Link" item to the "My test link" AnyField
     And I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
-    And I fill in "Title" with "Test link site tree link"
+    And I fill in "Link text" with "Test link site tree link"
     And I press the "Insert link" button
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     And I should see a clear button in the "My test link" AnyField
     Then I clear the "My test link" AnyField
+    And I wait for 2 seconds
     And I should see an empty "My test link" AnyField
     Then I press the "Save" button
     And I should see an empty "My test link" AnyField
@@ -51,12 +51,12 @@ Feature: Manage Single item
     Then I edit the "My test link" AnyField
     And I add a "Site Tree Link" item to the "My test link" AnyField
     And I select "Contact me" in the "#Form_ModalsAnyFieldForm_PageID_Holder" tree dropdown
-    And I fill in "Title" with "Test link site tree link"
+    And I fill in "Link text" with "Test link site tree link"
     And I press the "Insert link" button
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "Test link site tree link" and a description of "Site Tree Link: contact-me"
     Then I edit the "My test link" AnyField
-    And I fill in "Title" with "My udated test link"
+    And I fill in "Link text" with "My udated test link"
     And I press the "Insert link" button
     Then I should see a "My test link" AnyField filled with "My udated test link" and a description of "Site Tree Link: contact-me"
     Then I press the "Save" button
@@ -65,7 +65,7 @@ Feature: Manage Single item
   Scenario: I can fill a AnyField with an external item
     Then I edit the "My test link" AnyField
     And I add a "External Link" item to the "My test link" AnyField
-    Then I fill in "Title" with "Silverstripe"
+    Then I fill in "Link text" with "Silverstripe"
     And I fill in "External url" with "https://www.silverstripe.org"
     Then I press the "Insert link" button
     And I press the "Save" button
@@ -82,9 +82,12 @@ Feature: Manage Single item
   Scenario: I can fill a AnyField with a file link
     Then I edit the "My test link" AnyField
     And I add a "File Link" item to the "My test link" AnyField
+    Then I fill in "Link text" with "A file link"
+    And I press the "Choose existing" button
+    And I click on the ".insert-media-modal .toolbar__back-button" element
     And I click on the ".gallery__files .gallery-item__thumbnail" element
-    Then I fill in "Link description" with "A file link"
-    Then I press the "Link to file" button
+    Then I press the "Insert" button
+    Then I press the "Insert link" button
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "A file link" and a description of "File Link: file2.jpg"
 
@@ -92,7 +95,7 @@ Feature: Manage Single item
     Then I edit the "My test link" AnyField
     And I add a "Phone Link" item to the "My test link" AnyField
     Then I fill in "Phone" with "111"
-    And I fill in "Title" with "NZ Emergency services"
+    And I fill in "Link text" with "NZ Emergency services"
     Then I press the "Insert link" button
     And I press the "Save" button
     Then I should see a "My test link" AnyField filled with "NZ Emergency services" and a description of "Phone Link: 111"

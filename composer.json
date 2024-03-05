@@ -13,8 +13,7 @@
     "require-dev": {
         "silverstripe/recipe-testing": "^3",
         "squizlabs/php_codesniffer": "^3",
-        "maxime-rainville/silverstripe-linkfield-tester": "dev-master",
-        "silverstripe/linkfield": "dev-pulls/3/anyfield-compat"
+        "maxime-rainville/anyfield-tester": "dev-master"
     },
     "license": "BSD-3-Clause",
     "authors": [
@@ -44,11 +43,5 @@
         "process-timeout": 600
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": {
-        "silverstripe/linkfield": {
-            "type": "vcs",
-            "url": "git@github.com:creative-commoners/silverstripe-linkfield.git"
-        }
-    }
+    "prefer-stable": true
 }
