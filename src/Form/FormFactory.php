@@ -4,6 +4,7 @@ namespace SilverStripe\AnyField\Form;
 
 use LogicException;
 use SilverStripe\Admin\Forms\LinkFormFactory;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataObject;
 
@@ -26,6 +27,19 @@ class FormFactory extends LinkFormFactory
         $this->extend('updateFormFields', $fields, $controller, $name, $context);
 
         return $fields;
+    }
+
+    protected function getFormActions($controller, $name, $context)
+    {
+        $actions = parent::getFormActions($controller, $name, $context);
+
+        /** @var FormAction $insertAction */
+        $insertAction = $actions->fieldByName('action_insert');
+
+        // Update action button to be more descriptive
+        $insertAction?->setTitle(_t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'));
+
+        return $actions;
     }
 
     protected function getValidator($controller, $name, $context)
