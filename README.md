@@ -93,7 +93,7 @@ ManyAnyField::create('Pets')->setSort('Sort')
 A convenience extension can be applied to your DataObject classes to add the required field to make them sortable. The extension will automatically add a `Sort` integer field, define the default sort order and hide the `Sort` field from the CMS form.
 ```yml
 App\Models\FooBar:
-  extension:
+  extensions:
   - SilverStripe\AnyField\Extensions\Sortable
 ```
 
