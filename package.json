@@ -59,7 +59,7 @@
     "babel-jest": "^29.2.2",
     "jest-cli": "^29.2.2",
     "jest-environment-jsdom": "^29.3.1",
-    "postcss": "^8.4.25",
+    "postcss": "^8.4.31",
     "postcss-custom-properties": "^13.2.1",
     "postcss-loader": "^7.3.3",
     "webpack": "^5.74.0",
