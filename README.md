@@ -82,9 +82,9 @@ App\Models\Book:
   icon: book
 ```
 
-## Sorting the ManyManyField
+## Sorting the ManyAnyField
 
-`ManyManyField` can be configured to sort its results. Called `setSort` to define what field should be used to sort the results
+`ManyAnyField` can be configured to sort its results. Called `setSort` to define what field should be used to sort the results
 
 ```php
 ManyAnyField::create('Pets')->setSort('Sort')
