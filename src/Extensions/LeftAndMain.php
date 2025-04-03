@@ -11,7 +11,7 @@ use SilverStripe\View\Requirements;
  */
 class LeftAndMain extends Extension
 {
-    public function init()
+    public function onInit()
     {
         Requirements::add_i18n_javascript('maxime-rainville/anyfield:client/lang', false, true);
         Requirements::javascript('maxime-rainville/anyfield:client/dist/js/bundle.js', ['defer' => true]);
