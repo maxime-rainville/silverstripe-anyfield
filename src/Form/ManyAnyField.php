@@ -15,7 +15,7 @@ use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 
 /**
  * Allows CMS users to edit a list of links.
@@ -241,7 +241,7 @@ class ManyAnyField extends JsonField
 
     public function InputValue(): string
     {
-        $value = $this->Value();
+        $value = $this->getValue();
 
         if ($value instanceof SS_List) {
             $value = AnyService::singleton()->jsonSerializeList($value);
