@@ -60,7 +60,7 @@ class Page extends SiteTree
 
 ## Customising how DataObject look in the field
 
-Any DataObject can be managed by the AnyField and ManyAnyField without any special tweaks. However, you can get a bit more value with some simple tweaks. Those tweaks can be applied with DataExtension.
+Any DataObject can be managed by the AnyField and ManyAnyField without any special tweaks. However, you can get a bit more value with some simple tweaks. Those tweaks can be applied with Extension.
 
 ### Customising the Title
 
@@ -68,7 +68,7 @@ The AnyFields displays the selected DataObject title. By defining a `getTitle` m
 
 ### Showing a summary
 
-The AnyFields displays the type of the selected DataObject below its title. You can also display a summary by implementing a `getSummary` method on your DataObject class. This can be done with a DataExtension as well.
+The AnyFields displays the type of the selected DataObject below its title. You can also display a summary by implementing a `getSummary` method on your DataObject class. This can be done with a Extension as well.
 
 ### Showing an icon
 

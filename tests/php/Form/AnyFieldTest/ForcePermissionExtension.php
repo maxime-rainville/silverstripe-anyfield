@@ -5,9 +5,9 @@ namespace SilverStripe\AnyField\Tests\Form\AnyFieldTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\LinkField\Models\Link;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class ForcePermissionExtension extends DataExtension implements TestOnly
+class ForcePermissionExtension extends Extension implements TestOnly
 {
 
     public static array $forcePermissionCheck = [
