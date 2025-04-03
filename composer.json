@@ -3,16 +3,16 @@
     "description": "Add Silverstripe CMS field that can be used to manage any relation",
     "type": "silverstripe-vendormodule",
     "require": {
-        "php": "^8.1",
-        "silverstripe/framework": "^5",
-        "silverstripe/admin": "^2",
+        "php": "^8.3",
+        "silverstripe/framework": "^6",
+        "silverstripe/admin": "^3",
         "league/uri": "^7.1",
         "league/uri-components": "^7.1",
-        "maxime-rainville/silverstripe-react": "^0.1"
+        "maxime-rainville/silverstripe-react": "^0.2"
     },
     "require-dev": {
         "silverstripe/recipe-testing": "^3",
-        "squizlabs/php_codesniffer": "^3",
+        "squizlabs/php_codesniffer": "^3.7",
         "maxime-rainville/anyfield-tester": "dev-master"
     },
     "license": "BSD-3-Clause",
