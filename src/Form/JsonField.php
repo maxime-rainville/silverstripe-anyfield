@@ -130,7 +130,7 @@ abstract class JsonField extends ReactFormField
 
     public function InputValue(): string
     {
-        $value = $this->Value();
+        $value = $this->getValue();
 
         if ($value instanceof DataObject) {
             $value = AnyService::singleton()->map($value);

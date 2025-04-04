@@ -4,13 +4,13 @@ namespace SilverStripe\AnyField\Extensions;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
 /**
  * Utility extension that can be added to DataObject managed through a ManyAnyField to
  * make it easy to sort
  */
-class Sortable extends DataExtension
+class Sortable extends Extension
 {
 
     private static array $db = [

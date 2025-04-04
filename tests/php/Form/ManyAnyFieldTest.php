@@ -82,7 +82,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 
         $this->assertEquals(
             $expectedValue,
-            $field->Value(),
+            $field->getValue(),
             'Value should be deduct from the list when no other data is provided'
         );
     }
@@ -99,7 +99,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 
         $this->assertEquals(
             $expectedValue,
-            $field->Value(),
+            $field->getValue(),
             'Value should be deduct from the list matching the field name when the list is not explicitly set'
         );
     }
@@ -113,7 +113,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 
         $this->assertEquals(
             $expectedValue,
-            $field->Value(),
+            $field->getValue(),
             'When the value is explicitly set to a JSON string, we don\'t read it from the data list'
         );
     }
@@ -126,7 +126,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 
         $this->assertEquals(
             [],
-            $field->Value(),
+            $field->getValue(),
             'When the value is explicitly set to empty JSON string, we get an empty list'
         );
     }
@@ -141,7 +141,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
 
         $this->assertEquals(
             $expectedValue,
-            $field->Value(),
+            $field->getValue(),
             'Value should be deduct from the list when no other data is provided'
         );
     }

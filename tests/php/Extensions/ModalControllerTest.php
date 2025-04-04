@@ -54,7 +54,7 @@ class ModalControllerTest extends SapphireTest
         $field = $fields->dataFieldByName($name);
         $this->assertNotNull($field, "Field $name exists");
         $this->assertInstanceOf($fieldClass, $field, "Field $name is a $fieldClass");
-        $this->assertEquals($value, $field->Value(), "Field $name has value $value");
+        $this->assertEquals($value, $field->getValue(), "Field $name has value $value");
     }
 
     public function testBadKey()

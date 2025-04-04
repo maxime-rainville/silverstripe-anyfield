@@ -107,7 +107,7 @@ class AnyFieldTest extends AllowedClassesTraitTestCase
 
             $this->assertEquals(
                 $expected,
-                $field->Value(),
+                $field->getValue(),
                 "Setting AnyField value from $key works"
             );
         }
