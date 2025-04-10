@@ -6,7 +6,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\AnyField\Extensions\AjaxField;
+use SilverStripe\AnyField\Extensions\AjaxFieldLinkExtension;
 use SilverStripe\CMS\Forms\AnchorSelectorField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -25,10 +25,10 @@ class AjaxFieldTest extends SapphireTest
     public function testExtensionApplied()
     {
         $field = TreeDropdownField::create('Name', 'Label', SiteTree::class);
-        $this->assertTrue($field->hasExtension(AjaxField::class), 'AjaxField is applied to TreeDropdownField');
+        $this->assertTrue($field->hasExtension(AjaxFieldLinkExtension::class), 'AjaxField is applied to TreeDropdownField');
 
         $field = AnchorSelectorField::create('Name');
-        $this->assertTrue($field->hasExtension(AjaxField::class), 'AjaxField is applied to TreeDropdownField');
+        $this->assertTrue($field->hasExtension(AjaxFieldLinkExtension::class), 'AjaxField is applied to TreeDropdownField');
     }
 
     public function testUpdateLinkModalForm()

@@ -4,7 +4,7 @@ Name: anyfield
 
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - SilverStripe\AnyField\Extensions\LeftAndMain
+    - SilverStripe\AnyField\Extensions\SchemaControllerExtension
 
 SilverStripe\Admin\ModalController:
   extensions:
@@ -12,11 +12,11 @@ SilverStripe\Admin\ModalController:
 
 SilverStripe\Forms\TreeDropdownField:
   extensions:
-    - SilverStripe\AnyField\Extensions\AjaxField
+    - SilverStripe\AnyField\Extensions\AjaxFieldLinkExtension
 
 SilverStripe\CMS\Forms\AnchorSelectorField:
   extensions:
-    - SilverStripe\AnyField\Extensions\AjaxField
+    - SilverStripe\AnyField\Extensions\AjaxFieldLinkExtension
 
 
 SilverStripe\Core\Injector\Injector:
