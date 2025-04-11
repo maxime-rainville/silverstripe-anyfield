@@ -38,7 +38,7 @@ class AjaxFieldLinkExtension extends Extension
         $key = $request->getVar('key');
 
         $link = (string) Modifier::from($link)
-            ->mergeQuery("key={$key}")
+            ->mergeQuery(sprintf('key=%s', $key))
             ->getUri();
     }
 }

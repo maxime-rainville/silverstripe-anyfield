@@ -12,7 +12,7 @@ use SilverStripe\LinkField\Models\ExternalLink;
 use SilverStripe\LinkField\Models\EmailLink;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\AnyField\Extensions\Sortable;
+use SilverStripe\AnyField\Extensions\SortableModelExtension;
 use LogicException;
 
 class ManyAnyFieldTest extends AllowedClassesTraitTestCase
@@ -26,7 +26,7 @@ class ManyAnyFieldTest extends AllowedClassesTraitTestCase
     protected static $required_extensions = [
         Link::class => [
             AnyFieldTest\ForcePermissionExtension::class,
-            Sortable::class,
+            SortableModelExtension::class,
         ],
     ];
 

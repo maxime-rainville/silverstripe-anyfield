@@ -8,7 +8,7 @@ SilverStripe\Admin\LeftAndMain:
 
 SilverStripe\Admin\ModalController:
   extensions:
-    - SilverStripe\AnyField\Extensions\ModalController
+    - SilverStripe\AnyField\Extensions\ModalControllerFormExtension
 
 SilverStripe\Forms\TreeDropdownField:
   extensions:

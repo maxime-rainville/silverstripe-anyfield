@@ -13,6 +13,11 @@ use SilverStripe\View\Requirements;
  */
 class SchemaControllerExtension extends Extension
 {
+    /**
+     * Extension point in @see LeftAndMain::init()
+     *
+     * @return void
+     */
     public function onInit(): void
     {
         Requirements::add_i18n_javascript('maxime-rainville/anyfield:client/lang', false, true);

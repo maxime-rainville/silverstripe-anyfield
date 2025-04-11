@@ -4,13 +4,13 @@ namespace SilverStripe\AnyField\Tests\Extensions;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\LinkField\Models\Link;
-use SilverStripe\AnyField\Extensions\Sortable;
+use SilverStripe\AnyField\Extensions\SortableModelExtension;
 
 class SortableTest extends SapphireTest
 {
     protected static $required_extensions = [
         Link::class => [
-            Sortable::class,
+            SortableModelExtension::class,
         ],
     ];
 

@@ -118,12 +118,6 @@ class AnyService
         $form->loadDataFrom($data);
         $form->saveInto($record);
 
-        // foreach ($data as $key => $value) {
-        //     if ($key !== 'ID' && $record->hasField($key)) {
-        //         $record->setField($key, $value);
-        //     }
-        // }
-
         return $record;
     }
 
