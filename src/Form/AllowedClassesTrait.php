@@ -3,6 +3,7 @@
 namespace SilverStripe\AnyField\Form;
 
 use InvalidArgumentException;
+use Psr\Container\NotFoundExceptionInterface;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -20,6 +21,10 @@ trait AllowedClassesTrait
     /**
      * Retrieve the current BaseClass. If the BaseClass has not been explicitly set, try to guess what it is by looking
      * at the relation the field is pointed at. Returns a blank string if the BaseClass can not be ascertained.
+     *
+     * @param DataObjectInterface|null $record
+     * @return string
+     * @throws NotFoundExceptionInterface
      */
     public function getBaseClass(?DataObjectInterface $record = null): string
     {
@@ -27,12 +32,12 @@ trait AllowedClassesTrait
             return $this->baseClass;
         }
 
-        return (string)$this->guessBaseClass($record);
+        return (string) $this->guessBaseClass($record);
     }
-
 
     /**
      * Explicitly set the BaseClass for this any Field
+     *
      * @throws InvalidArgumentException If $className is not a valid DataObject class.
      */
     public function setBaseClass(string $className): self
@@ -40,9 +45,9 @@ trait AllowedClassesTrait
         $singleton = DataObject::singleton($className);
 
         if (!$singleton) {
-            throw new \InvalidArgumentException(
-                $className . ' is not a valid DataObject class and cannot be managed by an AnyField'
-            );
+            $message = sprintf('%s is not a valid DataObject class and cannot be managed by an AnyField', $className);
+
+            throw new InvalidArgumentException($message);
         }
 
         $this->baseClass = $className;
@@ -57,6 +62,7 @@ trait AllowedClassesTrait
     public function addExcludedClass(string $className): self
     {
         $this->excludedClasses[] = $className;
+
         return $this;
     }
 
@@ -73,7 +79,7 @@ trait AllowedClassesTrait
      */
     public function removeExcludedClass(string $className): self
     {
-        $this->excludedClasses = array_filter($this->excludedClasses, function ($class) use ($className) {
+        $this->excludedClasses = array_filter($this->excludedClasses, static function ($class) use ($className) {
             return $class !== $className;
         });
 
@@ -96,11 +102,13 @@ trait AllowedClassesTrait
     public function setRecursivelyAddChildClass(bool $recursivelyAddChildClass): self
     {
         $this->recursivelyAddChildClass = $recursivelyAddChildClass;
+
         return $this;
     }
 
     /**
      * Try to guess the base class for our any field
+     *
      * @param null|DataObjectInterface $record
      * @return null|string
      */
@@ -108,8 +116,10 @@ trait AllowedClassesTrait
 
     /**
      * Return a list of allowed DataObject classes that this field can create.
-     * @param null|DataObjectInterface $record Explicitly a DatabObject whose relation we'll use to guess the base class
+     *
+     * @param DataObjectInterface|null $record Explicitly a DataObject whose relation we'll use to guess the base class
      * @return array
+     * @throws NotFoundExceptionInterface
      */
     public function getAllowedDataObjectClasses(?DataObjectInterface $record = null): array
     {
@@ -137,11 +147,13 @@ trait AllowedClassesTrait
         $baseClass = $this->getBaseClass();
 
         $allowedDataObjectClasses = $this->getAllowedDataObjectClasses();
-        if (empty($allowedDataObjectClasses)) {
+
+        if (!$allowedDataObjectClasses) {
             $path = explode('\\', __CLASS__);
-            throw new \InvalidArgumentException(
-                sprintf('%s must have at least one allowed DataObject class', array_pop($path))
-            );
+            $classSegment = array_pop($path);
+            $message = sprintf('%s must have at least one allowed DataObject class', $classSegment);
+
+            throw new InvalidArgumentException($message);
         }
 
         $props['allowedDataObjectClasses'] = $allowedDataObjectClasses;
@@ -153,21 +165,28 @@ trait AllowedClassesTrait
     }
 
     /**
-     * Validate that the provided class name is allowed by this DataOject
+     * Validate that the provided class name is allowed by this DataObject
+     *
      * @param string $className
-     * @param null|DataObjectInterface $record Explicitly a DatabObject whose relation we'll use to guess the base class
+     * @param DataObjectInterface|null $record Explicitly a DataObject whose relation we'll use to guess the base class
      * @return void
-     * @throws InvalidArgumentException
+     * @throws NotFoundExceptionInterface
      */
     protected function validClassName(string $className, ?DataObjectInterface $record = null): void
     {
         $valid = array_keys($this->getAllowedDataObjectClasses($record));
-        if (!in_array($className, $valid)) {
-            throw new \InvalidArgumentException(sprintf(
-                '%s is not a valid DataObject class for this field. Valid classes are: %s',
-                $className,
-                implode(', ', $valid)
-            ));
+
+        // ClassName is valid
+        if (in_array($className, $valid)) {
+            return;
         }
+
+        $message = sprintf(
+            '%s is not a valid DataObject class for this field. Valid classes are: %s',
+            $className,
+            implode(', ', $valid)
+        );
+
+        throw new InvalidArgumentException($message);
     }
 }

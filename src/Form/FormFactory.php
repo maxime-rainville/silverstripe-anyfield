@@ -18,12 +18,19 @@ class FormFactory extends LinkFormFactory
         $dataObjectClass = DataObject::singleton($context['DataObjectClassKey']);
 
         if (!$dataObjectClass instanceof DataObject) {
-            throw new LogicException(sprintf('%s: DataObjectClass must be provided and must be an instance of DataObject', static::class));
+            $message = sprintf('%s: DataObjectClass must be provided and must be an instance of DataObject', static::class);
+
+            throw new LogicException($message);
         }
 
+        $idField = HiddenField::create('ID');
+        $classKeyField = HiddenField::create('dataObjectClassKey')
+            ->setValue($context['DataObjectClassKey']);
+
         $fields = $dataObjectClass->getCMSFields();
-        $fields->push(HiddenField::create('ID'));
-        $fields->push(HiddenField::create('dataObjectClassKey')->setValue($context['DataObjectClassKey']));
+        $fields->push($idField);
+        $fields->push($classKeyField);
+
         $this->extend('updateFormFields', $fields, $controller, $name, $context);
 
         return $fields;

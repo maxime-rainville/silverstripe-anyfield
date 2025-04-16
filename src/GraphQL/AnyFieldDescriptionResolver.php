@@ -6,7 +6,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use InvalidArgumentException;
 use SilverStripe\AnyField\Services\AnyService;
 use SilverStripe\GraphQL\Schema\DataObject\Resolver;
-use SilverStripe\AnyField\Type\Registry;
 
 class AnyFieldDescriptionResolver extends Resolver
 {
@@ -30,8 +29,11 @@ class AnyFieldDescriptionResolver extends Resolver
      */
     private static function resolveSingleDescription($data): array
     {
-        $id = isset($data['ID']) ? $data['ID'] : 0;
-        $description = ['title' => '', 'description' => ''];
+        $id = $data['ID'] ?? 0;
+        $description = [
+            'title' => '',
+            'description' => '',
+        ];
 
         // If we don't have a valid typeKey, we'll return a blank description
         if (!empty($data['dataObjectClassKey'])) {
