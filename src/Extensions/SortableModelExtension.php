@@ -34,6 +34,12 @@ class SortableModelExtension extends Extension
      */
     public function updateCMSFields(FieldList $fields): void
     {
+        $fields->removeByName([
+            // Remove the sort field in case it;s present
+            'Sort',
+        ]);
+
+        // Add the sort fields as hidden field so we can use it to hydrate the model data
         $sortField = HiddenField::create('Sort');
         $fields->add($sortField);
     }
